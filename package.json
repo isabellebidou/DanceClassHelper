@@ -1,0 +1,23 @@
+{
+  "name": "mydanceclasshelperapp",
+  "version": "1.0.0",
+  "description": "dance teachers and students tool and end of year project for NCI web Technology Hdip",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isabellebidou/DanceClassHelper.git"
+  },
+  "author": "Isabelle Bidou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/isabellebidou/DanceClassHelper/issues"
+  },
+  "homepage": "https://github.com/isabellebidou/DanceClassHelper#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "save": "^2.3.2"
+  }
+}
