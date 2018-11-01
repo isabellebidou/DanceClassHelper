@@ -2,7 +2,7 @@ extends layout
 block content
       .maincontent
         .formHold
-          h1.itemtitle Add an Asana
+          h1.itemtitle Add a class
           form(method = "POST")
             fieldset
               label(for= "englishname") Asana Name in English:
@@ -13,4 +13,5 @@ block content
               input(name= "comments", type = "text", placeholder = "comments (optional)") 
               label(for= "link") Link:
               input(name= "link", type = "text", placeholder = "something.com", required) 
-              button.button(type="submit") Create the asana
+              
+              button.button(type="submit") Create the class

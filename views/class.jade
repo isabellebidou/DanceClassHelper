@@ -6,11 +6,15 @@ block content
             .grid-container
               each row in res1
                 .item
-                  h1.itemtitle #{row.Name}
-                  label Sanskrit: 
-                  p.itemp #{row.Sanskrit} 
+                  h1.itemtitle #{row.className}
+                  label date: 
+                  p.itemp #{row.classDate}
+                  label venue: 
+                  p.itemp #{row.classVenue}
+                  label time: 
+                  p.itemp #{row.classTime}
                   label Comments: 
-                  p.itemp #{row.Comments}
-                  label Link: 
-                  p.itemp #{row.Link}
+                  p.itemp #{row.classComments}
+                  label price: 
+                  p.itemp #{row.classPrice}
                   
