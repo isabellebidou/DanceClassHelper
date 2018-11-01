@@ -1,0 +1,21 @@
+extends layout
+block content
+      .maincontent
+          form(method="post" action="/searchclasses")
+              input(name="search", type="text", Placeholder="Search For a class...") 
+              button.button(type="submit") Search
+      
+        
+          h2 Here a sample of the asanas you will have to study
+          
+            .grid-container
+              each row in res2
+                .item
+                  label English name: 
+                  h2.itemtitle #{row.Name}
+                  label Sanskrit name: 
+                  h2.itemtitle #{row.Sanskrit}
+                  a.button(href='#{row.Link}') Instructions
+                  a.button(href='/editclass/#{row.Id}') Edit
+                  a.button(href='/deleteclass/#{row.Id}') Delete
+                  

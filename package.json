@@ -18,6 +18,8 @@
   "homepage": "https://github.com/isabellebidou/DanceClassHelper#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "jade": "^1.11.0",
+    "mysql": "^2.16.0",
     "save": "^2.3.2"
   }
 }

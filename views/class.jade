@@ -1,0 +1,16 @@
+extends layout
+block content
+      .maincontent
+
+        
+            .grid-container
+              each row in res1
+                .item
+                  h1.itemtitle #{row.Name}
+                  label Sanskrit: 
+                  p.itemp #{row.Sanskrit} 
+                  label Comments: 
+                  p.itemp #{row.Comments}
+                  label Link: 
+                  p.itemp #{row.Link}
+                  
