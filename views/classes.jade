@@ -9,13 +9,14 @@ block content
           h2 beginners classes
           
             .grid-container
-              each row in res2
+              each row in res1
                 .item
                   label Class name: 
                   h2.itemtitle #{row.className}
-                  label Sanskrit name: 
+                  label Class date: 
                   h2.itemtitle #{row.classDate}
-                  a.button(href='#{row.Link}') Instructions
-                  a.button(href='/editclass/#{row.Id}') Edit
-                  a.button(href='/deleteclass/#{row.Id}') Delete
+
+                  a.button(href="/class/#{row.classId}") Show
+                  a.button(href='/editclass/#{row.classId}') Edit
+                  a.button(href='/deleteclass/#{row.classId}') Delete
                   

@@ -1,0 +1,25 @@
+extends layout
+block content
+      .maincontent
+
+        
+            .grid-container
+              each row in res1
+                .item
+                  h1.itemtitle User
+                  label first name: 
+                  p.itemp #{row.userFirstName}
+                  label last name: 
+                  p.itemp #{row.userLastName}
+                  label date joined: 
+                  p.itemp #{row.userDateJoined}
+                  label comments: 
+                  p.itemp #{row.userComments}
+                  label email: 
+                  p.itemp #{row.userEmail}
+                  label password: 
+                  p.itemp #{row.userPassword}
+                  label user role: 
+                  p.itemp #{row.userRole}
+                  label user active: 
+                  p.itemp #{row.userActive}

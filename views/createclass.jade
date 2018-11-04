@@ -5,13 +5,23 @@ block content
           h1.itemtitle Add a class
           form(method = "POST")
             fieldset
-              label(for= "englishname") Asana Name in English:
-              input(name= "englishname", type = "text", placeholder = "english name", required) 
-              label(for= "sanskritname") Asana Name in Sanskrit:
-              input(name= "sanskritname", type = "text", placeholder = "sanskrit name", required)
-              label(for= "comments") Comments:
-              input(name= "comments", type = "text", placeholder = "comments (optional)") 
-              label(for= "link") Link:
-              input(name= "link", type = "text", placeholder = "something.com", required) 
-              
+              label(for= "name") class name:
+              input(name= "name", type = "text", placeholder = " name", required) 
+              label(for= "date") class date:
+              input(name= "date", type ="date", placeholder = "date", required)
+              label(for= "venue") Comments:
+              input(name= "venue", type = "text", placeholder = "venue") 
+              label(for= "time") time:
+              input(name= "time", type ="time", placeholder = "7:30", required)
+              label(for= "price") price:
+              input(name= "price", type ="text", placeholder = "12", required)
+              label(for= "comments") comments:
+              input(name= "comments", type ="text", placeholder = "...", autocomplete="on")
+              label(for= "link") comments:
+              input(name= "link", type ="url", placeholder = "link")
+              br
               button.button(type="submit") Create the class
+              
+              //("' + req.body.name + '","' + req.body.date + '","' + req.body.venue + '",
+              //"' + req.body.time + '","' + req.body.price + '","' + req.body.comments +
+              //'","' + req.body.link + '")

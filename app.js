@@ -1,6 +1,7 @@
 var express = require("express"); // call expresss to be used by application
 var app = express();
 var mysql = require('mysql');// allow access to sql
+var bodyParser = require('body-parser');
 
 const path = require('path');
 const VIEWS = path.join(__dirname, 'views');
@@ -24,7 +25,7 @@ db.connect((err) => {
 
     }
 });
-
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //home page
 app.get('/', function(req, res) {
@@ -49,7 +50,7 @@ app.get('/classes', function(req, res) {
 //students page
 app.get('/students', function(req, res) {
 
-    let sql = 'select * FROM danceclassusers INNER JOIN userRoles ON danceclassusers.userRoleId = userRoles.userRolesId WHERE danceclassusers.userRoleId = "student"; '
+    let sql = 'select * FROM danceclassusers ; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw err;
         console.log(res1);
@@ -59,14 +60,30 @@ app.get('/students', function(req, res) {
     console.log('now you are on students');
 });
 
-//createclass page
-app.get('/createclass', function(req, res) {
-    
-        // res.sendFile('index.html', {root: VIEWS},behaviour);
-        res.render('createclass', { root: VIEWS });
-        console.log('now you ready to create a class');
+app.get('/class/:id', function(req, res) { 
 
+    let sql = 'SELECT * FROM classes WHERE classId = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.render('class', { root: VIEWS, res1 });
+
+    });
+   
+    console.log("Now you are on the class page!");
 });
+
+app.get('/student/:id', function(req, res) { 
+
+    let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.render('student', { root: VIEWS, res1 });
+
+    });
+   
+    console.log("Now you are on the student page!");
+});
+
 
 //register page
 app.get('/register', function(req, res) {
@@ -76,124 +93,99 @@ app.get('/register', function(req, res) {
         console.log('now you ready to register');
 
 });
+//--------------------- CREATE TABLES
+// app.get('/createuserrolestable', function(req, res) {
+//     let sql = 'CREATE TABLE userRoles (userRolesId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userRolesName varchar(255));'
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+// });
 
-app.get('/createuserrolestable', function(req, res) {
+// app.get('/createuserstable', function(req, res) {
+//     let sql = 'CREATE TABLE danceclassusers (userId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userFirstName varchar(255), userLastName varchar(255), userDateJoined date,  userComments varchar(255),userEmail varchar(50), userPassword varchar(12),userRolesId int,userActive boolean,FOREIGN KEY (userRolesId) REFERENCES userRoles(userRolesId));'
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+// });
 
-    let sql = 'CREATE TABLE userRoles (userRolesId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userRolesName varchar(255));'
+// app.get('/createclassestable', function(req, res) {
 
+//     let sql = 'CREATE TABLE classes (classId int NOT NULL AUTO_INCREMENT PRIMARY KEY, className varchar(255), classDate date, classVenue varchar(255), classTime varchar (255), classPrice int(255), classComments varchar(255), Link varchar(255));'
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+//     res.send("table created");
+// });
 
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
+// app.get('/createcarttable', function(req, res) {
 
-
-    });
-});
-
-app.get('/createuserstable', function(req, res) {
-
-    let sql = 'CREATE TABLE danceclassusers (userId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userFirstName varchar(255), userLastName varchar(255), userDateJoined date,  userComments varchar(255),userEmail varchar(50), userPassword varchar(12),userRolesId int,userActive boolean,FOREIGN KEY (userRolesId) REFERENCES userRoles(userRolesId));'
-
-
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
-
-
-    });
-});
-
-app.get('/createclassestable', function(req, res) {
-
-    let sql = 'CREATE TABLE classes (classId int NOT NULL AUTO_INCREMENT PRIMARY KEY, className varchar(255), classDate date, classVenue varchar(255), classTime varchar (255), classPrice int(255), classComments varchar(255), Link varchar(255));'
-
-
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
-
-
-    });
-    res.send("table created");
-});
-
-app.get('/createcarttable', function(req, res) {
-
-    let sql = 'CREATE TABLE cart (cartId int NOT NULL AUTO_INCREMENT PRIMARY KEY, cartDate date, cartStatus varchar(255), cartTotal int(255), cartUserId int (255),FOREIGN KEY (cartUserId) REFERENCES danceclassusers(userId));'
+//     let sql = 'CREATE TABLE cart (cartId int NOT NULL AUTO_INCREMENT PRIMARY KEY, cartDate date, cartStatus varchar(255), cartTotal int(255), cartUserId int (255),FOREIGN KEY (cartUserId) REFERENCES danceclassusers(userId));'
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+//     res.send("table created");
+// });
 
 
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
+// app.get('/createcartclasstable', function(req, res) {
 
+//     let sql = 'CREATE TABLE cartClass (cartId int, classId int,PRIMARY KEY (cartId, classId), FOREIGN KEY (cartId) REFERENCES cart(cartId),FOREIGN KEY (classId) REFERENCES classes(classId));'
 
-    });
-    res.send("table created");
-});
-app.get('/createcartclasstable', function(req, res) {
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+//     res.send("table created");
+// });
+// app.get('/createuserclasstable', function(req, res) {
 
-    let sql = 'CREATE TABLE cartClass (cartId int, classId int,PRIMARY KEY (cartId, classId), FOREIGN KEY (cartId) REFERENCES cart(cartId),FOREIGN KEY (classId) REFERENCES classes(classId));'
+//     let sql = 'CREATE TABLE userClass (userId int, classId int,PRIMARY KEY (userId, classId), FOREIGN KEY (userId) REFERENCES danceclassusers(userId),FOREIGN KEY (classId) REFERENCES class(classId));'
 
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+// });
+// app.get('/createstepfamilytable', function(req, res) {
 
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
+//     let sql = 'CREATE TABLE stepFamily (stepFamilyId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepFamilyName varchar(255));'
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+// });
+// app.get('/createstepcategorytable', function(req, res) {
 
+//     let sql = 'CREATE TABLE stepCategory (stepCategoryId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepCategoryName varchar(255));'
 
-    });
-    res.send("table created");
-});
-app.get('/createuserclasstable', function(req, res) {
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+// });
+// app.get('/createstepzillpatterntable', function(req, res) {
 
-    let sql = 'CREATE TABLE userClass (userId int, classId int,PRIMARY KEY (userId, classId), FOREIGN KEY (userId) REFERENCES danceclassusers(userId),FOREIGN KEY (classId) REFERENCES class(classId));'
+//     let sql = 'CREATE TABLE stepZillPattern (stepZillPatternId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepZillPatternName varchar(255));'
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+// });
 
+// app.get('/createsteptable', function(req, res) {
 
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
+//     let sql = 'CREATE TABLE step (stepId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepName varchar(255), stepFamilyId varchar(255), stepCategoryId varchar(255),  stepZillPatternId varchar(255),  stepComments varchar(255), stepLink varchar(255),FOREIGN KEY (stepFamilyId) REFERENCES stepFamily(stepFamilyId),FOREIGN KEY (stepCategoryId) REFERENCES stepCategory(stepCategoryId),FOREIGN KEY (stepZillPatternId) REFERENCES stepZillPattern(stepZillPatternId));'
 
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
 
-    });
-});
-app.get('/createstepfamilytable', function(req, res) {
+//     });
+// });
 
-    let sql = 'CREATE TABLE stepFamily (stepFamilyId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepFamilyName varchar(255));'
+// app.get('/createclasssteptable', function(req, res) {
 
+//     let sql = 'CREATE TABLE classStep (classId int, stepId int,PRIMARY KEY ( classId,stepId), FOREIGN KEY (classId) REFERENCES classes(classId),FOREIGN KEY (stepId) REFERENCES step(stepId));'
 
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
+//     });
+// });
 
-
-    });
-});
-app.get('/createstepcategorytable', function(req, res) {
-
-    let sql = 'CREATE TABLE stepCategory (stepCategoryId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepCategoryName varchar(255));'
-
-
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
-
-
-    });
-});
-app.get('/createstepzillpatterntable', function(req, res) {
-
-    let sql = 'CREATE TABLE stepZillPattern (stepZillPatternId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepZillPatternName varchar(255));'
-
-
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
-
-
-    });
-});
-
-app.get('/createsteptable', function(req, res) {
-
-    let sql = 'CREATE TABLE step (stepId int NOT NULL AUTO_INCREMENT PRIMARY KEY, stepName varchar(255), stepFamilyId varchar(255), stepCategoryId varchar(255),  stepZillPatternId varchar(255),  stepComments varchar(255), stepLink varchar(255),FOREIGN KEY (stepFamilyId) REFERENCES stepFamily(stepFamilyId),FOREIGN KEY (stepCategoryId) REFERENCES stepCategory(stepCategoryId),FOREIGN KEY (stepZillPatternId) REFERENCES stepZillPattern(stepZillPatternId));'
-
-
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
-
-
-    });
-});
 app.get('/createtable', function(req, res) {
 
     let sql = ''
@@ -205,40 +197,34 @@ app.get('/createtable', function(req, res) {
 
     });
 });
-app.get('/createclasssteptable', function(req, res) {
+//------------------ CRUD
 
-    let sql = 'CREATE TABLE classStep (classId int, stepId int,PRIMARY KEY ( classId,stepId), FOREIGN KEY (classId) REFERENCES classes(classId),FOREIGN KEY (stepId) REFERENCES step(stepId));'
+//------------------- CLASS
 
+//createclass page
+app.get('/createclass', function(req, res) {
+    
+        // res.sendFile('index.html', {root: VIEWS},behaviour);
+        res.render('createclass', { root: VIEWS });
+        console.log('now you ready to create a class');
 
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
-
-
-    });
 });
-
-
-
 
 //add entry to class table on post on button press
 app.post('/createclass', function(req, res) {
-
     let sql = 'INSERT INTO classes (className,classDate,classVenue,classTime,classPrice,classComments,Link) VALUES ("' + req.body.name + '","' + req.body.date + '","' + req.body.venue + '","' + req.body.time + '","' + req.body.price + '","' + req.body.comments + '","' + req.body.link + '");'
-
+    
     let query = db.query(sql, (err, res) => {
-        if (err) throw err;
 
+        if (err) throw err;
     });
 
-    res.render('index', { root: VIEWS });
-
-
+    res.render('classes', { root: VIEWS });
 
 });
 
-//edit data of  muscle table entry on post on button press
 app.get('/editclass/:id', function(req, res) {
-    let sql = 'SELECT * FROM classes WHERE Id = "' + req.params.id + '"; '
+    let sql = 'SELECT * FROM classes WHERE classId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
         res.render('editclass', { root: VIEWS, res1 });
@@ -268,52 +254,56 @@ app.get('/deleteclass/:id', function(req, res) {
 
 });
 
+//--------------------------USER
 
+//createuser page
+app.get('/createstudent', function(req, res) {
+
+        res.render('createstudent', { root: VIEWS });
+        console.log('now you ready to create a student');
+
+});
 
 //add entry to users table on post on button press
-app.post('/createuser', function(req, res) {
+app.post('/createstudent', function(req, res) {
 
-    let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRolesId,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.roleid +  '","' + req.body.active + '");'
-
+    let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
 
     });
-
-    res.render('index', { root: VIEWS });
-
-
+    res.render('students', { root: VIEWS });
 
 });
 
 //edit data of  muscle table entry on post on button press
-app.get('/edituser/:id', function(req, res) {
-    let sql = 'SELECT * FROM danceclassusers WHERE Id = "' + req.params.id + '"; '
+app.get('/editstudent/:id', function(req, res) {
+    let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('edituser', { root: VIEWS, res1 });
+        res.render('editstudent', { root: VIEWS, res1 });
     });
 });
 
-app.post('/edituser/:id', function(req, res) {
+app.post('/editstudent/:id', function(req, res) {
 
-        let sql = 'UPDATE danceclassusers SET userFirstName= "' + req.body.newfirstname + '" , userLastName = "' + req.body.newlastname + '", userDateJoined = "' + req.body.newdatejoined + '", userComments = "' + req.body.newcomments + '", userEmail = "' + req.body.newemail + '", userPassword = "' + req.body.newpassword + '", userRolesId = "' + req.body.newrolesid + '", userActive = "'+ req.body.newactive +'" WHERE Id = "' + req.params.id + '" ;'
+        let sql = 'UPDATE danceclassusers SET userFirstName= "' + req.body.newfirstname + '" , userLastName = "' + req.body.newlastname + '", userDateJoined = "' + req.body.newdatejoined + '", userComments = "' + req.body.newcomments + '", userEmail = "' + req.body.newemail + '", userPassword = "' + req.body.newpassword + '", userRole = "' + req.body.newrole + '", userActive = "'+ req.body.newactive +'" WHERE userId = "' + req.params.id + '" ;'
 
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
             console.log(res1);
         });
-        res.redirect(/users/ + req.params.id);
+        res.redirect(/student/ + req.params.id);
 
 });
 
 
-app.get('/deleteuser/:id', function(req, res) {
+app.get('/deletestudent/:id', function(req, res) {
     
-        let sql = 'DELETE FROM danceclassusers WHERE Id = "' + req.params.id + '"; '
+        let sql = 'DELETE FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
-            res.redirect('/users');
+            res.redirect('/students');
         });
 
 });
@@ -326,21 +316,17 @@ app.get('/deleteuser/:id', function(req, res) {
 app.post('/createuserrole', function(req, res) {
 
     let sql = 'INSERT INTO userRoles (userRolesId,userRolesName) VALUES ("' + req.body.rolesid + '","' + req.body.rolesname + '");'
-
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
 
     });
-
     res.render('index', { root: VIEWS });
-
-
 
 });
 
 //edit data of  muscle table entry on post on button press
 app.get('/edituserroles/:id', function(req, res) {
-    let sql = 'SELECT * FROM userRoles WHERE Id = "' + req.params.id + '"; '
+    let sql = 'SELECT * FROM userRoles WHERE userId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
         res.render('edituser', { root: VIEWS, res1 });
@@ -350,7 +336,6 @@ app.get('/edituserroles/:id', function(req, res) {
 app.post('/edituserroles/:id', function(req, res) {
 
         let sql = 'UPDATE userRoles SET userRolesId = "' + req.body.newuserroleid + '" , userRolesName = "' + req.body.newuserrolename + '" ;'
-
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
             console.log(res1);
@@ -371,12 +356,6 @@ app.get('/deleteuserroles/:id', function(req, res) {
 });
 
 
-
-
-
-
-
-
 //add entry to userroles table on post on button press
 app.post('/creatcart', function(req, res) {
 
@@ -384,18 +363,14 @@ app.post('/creatcart', function(req, res) {
 
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
-
     });
 
     res.render('index', { root: VIEWS });
-
-
-
 });
 
 //edit data of  muscle table entry on post on button press
 app.get('/editcart/:id', function(req, res) {
-    let sql = 'SELECT * FROM cart WHERE Id = "' + req.params.id + '"; '
+    let sql = 'SELECT * FROM cart WHERE cartId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
         res.render('editcart', { root: VIEWS, res1 });
@@ -417,7 +392,7 @@ app.post('/editcart/:id', function(req, res) {
 
 app.get('/deletecart/:id', function(req, res) {
     
-        let sql = 'DELETE FROM cart WHERE Id = "' + req.params.id + '"; '
+        let sql = 'DELETE FROM cart WHERE cartId = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
             res.redirect('/index');
@@ -432,16 +407,12 @@ app.get('/deletecart/:id', function(req, res) {
 app.post('/createstepfamily', function(req, res) {
 
     let sql = 'INSERT INTO stepFamily (stepFamilyId,stepFamilyName) VALUES ("' + req.body.stepfamilyid + '","' + req.body.stepfamilyname +'");'
-
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
 
     });
 
     res.render('index', { root: VIEWS });
-
-
-
 });
 
 //edit data of  muscle table entry on post on button press
@@ -476,10 +447,7 @@ app.get('/deletestepfamily/:id', function(req, res) {
 
 });
 
-
-
-
-//add entry to userroles table on post on button press
+//add entry to stepCategory table on post on button press
 app.post('/createstepcategory', function(req, res) {
 
     let sql = 'INSERT INTO stepCategory (stepCategoryId,stepCategoryName) VALUES ("' + req.body.stepcategoryid + '","' + req.body.stepcategoryname +'");'
@@ -491,11 +459,9 @@ app.post('/createstepcategory', function(req, res) {
 
     res.render('stepcategories', { root: VIEWS });
 
-
-
 });
 
-//edit data of  muscle table entry on post on button press
+//edit data of  stepcategory table entry on post on button press
 app.get('/editstepcategory/:id', function(req, res) {
     let sql = 'SELECT * FROM stepCategory WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
@@ -539,9 +505,6 @@ app.post('/createstepzillpattern', function(req, res) {
     });
 
     res.render('stepzillpatterns', { root: VIEWS });
-
-
-
 });
 
 //edit data of  muscle table entry on post on button press
@@ -575,10 +538,6 @@ app.get('/deletestepzillpattern/:id', function(req, res) {
         });
 
 });
-
-
-
-
 //add entry to users table on post on button press
 app.post('/createstep', function(req, res) {
 
@@ -590,9 +549,6 @@ app.post('/createstep', function(req, res) {
     });
 
     res.render('steps', { root: VIEWS });
-
-
-
 });
 
 //edit data of  muscle table entry on post on button press

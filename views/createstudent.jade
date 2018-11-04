@@ -1,0 +1,37 @@
+extends layout
+block content
+      .maincontent
+        .formHold
+          h1.itemtitle Add a user
+          form(method = "POST")
+            fieldset
+              label(for= "firstname") first name:
+              input(name= "firstname", type = "text", placeholder = " firstname", required) 
+              label(for= "lastname") last name:
+              input(name= "lastname", type ="text", placeholder = "lastname", required)
+              label(for= "datejoined") date joined:
+              input(name= "datejoined", type = "date", placeholder = "date joined") 
+              label(for= "comments") comments:
+              input(name= "comments", type ="text", placeholder = "comments")
+              label(for= "email") email:
+              input(name= "email", type ="email", placeholder = "email", required)
+              label(for= "password") password:
+              input(name= "password", type ="password", placeholder = "password", required)
+              br
+              label(for= "role") role:
+              input(type='radio', name='role', value='student', checked='')
+              |  student
+              input(type='radio', name='role', value='teacher')
+              |  teacher
+              br
+              label(for= "active") active:
+              input(type='radio', name='active', value='true', checked='')
+              |  active
+              input(type='radio', name='active', value='false')
+              |  inactive
+              br
+              button.button(type="submit") Create the user
+              
+              //("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' 
+              //+ req.body.comments + '","' + req.body.email + '","' + req.body.password + '",
+              //"' + req.body.role +  '","' + req.body.active + '")
