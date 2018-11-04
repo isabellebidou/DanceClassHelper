@@ -2,17 +2,17 @@ var express = require("express"); // call expresss to be used by application
 var app = express();
 var mysql = require('mysql');// allow access to sql
 var bodyParser = require('body-parser');
-
+var fs = require("fs");
 const path = require('path');
 const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
 app.use(express.static("images"));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
-    host: ‘********.com',
-    user: ‘******',
-    password: ‘******',
-    database: ‘******',
+    host: 'isabellebidou.com',
+    user: 'isabelle_1',
+    password: 'TheHorse18',
+    database: 'isabelle_db',
     port: 3306
 });
 db.connect((err) => {
@@ -25,6 +25,7 @@ db.connect((err) => {
 
     }
 });
+var steps = require("./models/steps.json");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //home page
@@ -91,6 +92,15 @@ app.get('/register', function(req, res) {
         // res.sendFile('index.html', {root: VIEWS},behaviour);
         res.render('register', { root: VIEWS });
         console.log('now you ready to register');
+
+});
+
+//step page
+app.get('/step', function(req, res) {
+    
+        
+        res.render('step', { root: VIEWS });
+        console.log('checking a step');
 
 });
 //--------------------- CREATE TABLES
@@ -219,7 +229,7 @@ app.post('/createclass', function(req, res) {
         if (err) throw err;
     });
 
-    res.render('classes', { root: VIEWS });
+    res.redirect('/classes');
 
 });
 
@@ -265,14 +275,16 @@ app.get('/createstudent', function(req, res) {
 });
 
 //add entry to users table on post on button press
-app.post('/createstudent', function(req, res) {
+app.post('/createstudent', function(req, res1) {
 
     let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
 
     });
-    res.render('students', { root: VIEWS });
+    //res1.render('students', { root: VIEWS });
+    res1.redirect('/students');
+   
 
 });
 
@@ -582,6 +594,179 @@ app.get('/deletestep/:id', function(req, res) {
         });
 
 });
+
+app.get('/step/:id', function(req, res) { 
+
+function choosestep(indOne) {
+        return indOne.id === req.params.id;
+    }
+
+
+
+    console.log("id or step= " + req.params.id);
+    console.log("step");
+    var indOne = steps.filter(choosestep);
+
+    res.render('step', { indOne: indOne });
+});
+
+app.get('/queryme', function(req,res){
+    let sql = 'SELECT * FROM classes';
+    let query = db.query(
+        sql,(err,res) =>{
+            if(err) throw err;
+            console.log(res);
+        });
+        res.send("message in the console");
+
+});
+
+
+//----------------------------------
+//-------------------------------------json manipulation: STEPS
+app.get('/addstep', function(req, res) {
+
+   // if (req.session.email == "LoggedIn") {
+        // res.sendFile('index.html', {root: VIEWS},behaviour);
+        res.render('addstep', { root: VIEWS });
+        console.log('now you see th steps');
+    // }
+    // else {
+    //     res.redirect('/login');
+    // }
+});
+
+app.get("/steps", function(req, res) {
+
+    res.render("steps", { steps: steps });
+    console.log("steps");
+});
+
+app.post('/addstep', function(req, res) {
+    var count = Object.keys(steps).length; // Tells us how many products we have its not needed but is nice to show how we can do this
+    console.log(count);
+
+    // This will look for the current largest id in the steps JSON file this is only needed if you want the steps to have an auto ID which is a good idea 
+
+    function getMax(steps, id) {
+        var max
+        for (var i = 0; i < steps.length; i++) {
+            if (!max || parseInt(steps[i][id]) > parseInt(max[id]))
+                max = steps[i];
+
+        }
+        return max;
+    }
+
+    var maxPpg = getMax(steps, "id"); // This calls the function above and passes the result as a variable called maxPpg.
+    console.log(maxPpg);
+    var newId = maxPpg.id + 1; // this creates a nwe variable called newID which is the max Id + 1
+    console.log(newId); // We console log the new id for show reasons only
+
+    // create a new product based on what we have in our form on the add page 
+
+    var step = {
+        step: req.body.step, // name called from the add.jade page textbox
+
+        answer: req.body.answer, // content called from the add.jade page textbox
+        id: newId, // this is the variable created above
+
+    };
+    console.log(step) // Console log the new product 
+    var json = JSON.stringify(steps); // Convert from object to string
+
+    // The following function reads the json file then pushes the data from the variable above to the steps JSON file. 
+    fs.readFile('./models/steps.json', 'utf8', function readFileCallback(err, data) {
+        if (err) {
+            throw (err);
+        }
+        else {
+            steps.push(step); // add the information from the above variable
+            json = JSON.stringify(steps, null, 4); // converted back to JSON the 4 spaces the json file out so when we look at it it is easily read. So it indents it. 
+            fs.writeFile('./models/steps.json', json, 'utf8'); // Write the file back
+
+        }
+    });
+    res.redirect("/steps")
+});;
+
+
+
+
+
+
+
+
+
+app.get('/editstep/:id', function(req, res) {
+
+    function choosestep(indOne) {
+        return indOne.id === parseInt(req.params.id)
+    }
+
+
+
+    console.log("id or step= " + req.params.id);
+    console.log("editstep");
+    var indOne = steps.filter(choosestep);
+
+    res.render('editstep', { indOne: indOne });
+});
+
+
+//post request to edit the individual step
+app.post('/editstep/:id', function(req, res) {
+
+    var x = req.body.newstep;
+    var y = req.body.newanswer;
+    var z = parseInt(req.params.id);
+
+    steps.splice(z - 1, 1, { step: x, answer: y, id: z });
+    var json = JSON.stringify(steps, null, 4);
+
+    fs.writeFile('./models/steps.json', json, 'utf8');
+    res.redirect("/quiz");
+
+});
+
+app.get("/deletestep/:id", function(req, res) {
+    if (req.session.email == "LoggedIn") {
+        var z = parseInt(req.params.id);
+        steps.splice(z - 1, 1);
+        var json = JSON.stringify(steps, null, 4);
+        recalibrate();
+        fs.writeFile('./models/steps.json', json, 'utf8');
+
+        res.redirect("/steps");
+    }
+    else {
+        res.redirect('/login');
+    }
+
+});
+// this is used after you delete a step to keep numbers in order
+function recalibrate() {
+
+    var x = 0;
+    for (x; x < steps.length; x++) {
+        steps[x].id = x + 1;
+
+    }
+    var json = JSON.stringify(steps, null, 4);
+    fs.writeFile('./models/steps.json', json, 'utf8');
+}
+
+// End JSON
+//end of json manipulation
+
+
+
+
+
+
+
+
+
 
 //set up the environment for the app to run
 app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0" , function(){

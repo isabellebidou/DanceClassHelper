@@ -12,8 +12,8 @@ block content
                 input(name= "newfirstname", type = "text", value = "#{row.userFirstName}") 
                 label(for= "newlastname") last name:
                 input(name= "newlastname", type = "text", value = "#{row.userLastName}") 
-                label(for= "newdatejoined") date joined:
-                input(name= "newdatejoined", type = "date", value = "#{row.userDateJoined}") 
+                label(for= "newdatejoined") date joined:#{row.userDateJoined}
+                input(name= "newdatejoined", type = "date", value = "#{row.userDateJoined}", placeholder="#{row.userDateJoined}") 
                 label(for= "newcomments") comments:
                 input(name= "newcomments", type = "text", value = "#{row.userComments}") 
                 label(for= "newemail") email:
@@ -27,9 +27,9 @@ block content
                 |  teacher
                 br
                 label(for= "active") active:
-                input(type='radio', name='newactive', value='true', checked = "#{row.userActive}" == "true")
+                input(type='radio', name='newactive', value='active', checked = "#{row.userActive}" == "active")
                 |  active
-                input(type='radio', name='newactive', value='false' checked = "#{row.userActive}" == "false")
+                input(type='radio', name='newactive', value='inactive' checked = "#{row.userActive}" == "inactive")
                 |  inactive
                 button.button(type="submit") Update
                 //https://stackoverflow.com/questions/13624650/jade-radio-button-checked-condition

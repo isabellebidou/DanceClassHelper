@@ -1,0 +1,14 @@
+extends layout
+block content
+      .maincontent
+        
+          h2 Here are the steps we need to know
+           .grid-container
+            each step in steps
+             .item
+              h1.itemtitle #{step.name}
+              p.itemp #{step.family}
+              p.itemp #{step.category}
+              a.button(href='/step/#{step.id}') View
+              a.button(href='/editstep/#{step.id}') Edit
+              a.button(href='/deletestep/#{step.id}') Delete

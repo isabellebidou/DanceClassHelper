@@ -1,0 +1,20 @@
+extends layout
+block content
+      .maincontent
+      h1.Step
+
+        
+            .grid-container
+              each step in indOne
+               
+                .item
+                  h1.itemtitle #{step.name}
+                  iframe#player.centered(width='420', height='315', frameborder='0', allowfullscreen='')
+                  #id01
+                  
+                  script.
+                    | var ststr = step.url.split("&t=")[1];
+                    | var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
+                    | var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
+                    | player.setAttribute("src", embedUrl);
+                    | window.location.href = "#video";
