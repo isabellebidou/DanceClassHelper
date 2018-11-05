@@ -3,6 +3,7 @@ var app = express();
 var mysql = require('mysql');// allow access to sql
 var bodyParser = require('body-parser');
 var fs = require("fs");
+var behaviour = require('./behaviour.js');
 const path = require('path');
 const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
@@ -596,18 +597,24 @@ app.get('/deletestep/:id', function(req, res) {
 });
 
 app.get('/step/:id', function(req, res) { 
+    
+    var indOne = null;
 
 function choosestep(indOne) {
-        return indOne.id === req.params.id;
+    
+        return indOne.index === parseInt(req.params.id);
     }
 
-
-
     console.log("id or step= " + req.params.id);
-    console.log("step");
-    var indOne = steps.filter(choosestep);
+    indOne = steps.filter(choosestep);
+    console.log(indOne);
 
-    res.render('step', { indOne: indOne });
+    
+  
+//    var embedUrl = behaviour.makeEmbedUrl(indOne[0].url, indOne[0].id);
+//    console.log("app.get: "+embedUrl);
+
+    res.render('step', { indOne:indOne});
 });
 
 app.get('/queryme', function(req,res){

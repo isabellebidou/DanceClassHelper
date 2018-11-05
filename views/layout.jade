@@ -1,18 +1,14 @@
 doctype html
 html
   head
-    title isabelle Bidou- Web Application Development - End Of Year Project
+    title isabelle Bidou- Web Application Development - End of Year Project
     meta(charset='UTF-8')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
     meta(name='viewport', content='width=device-width,initial-scale=1')
     link(rel='stylesheet', href='../app.css', type='text/css')
-    link(rel='stylesheet', href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
-    link(rel='stylesheet', href='/resources/demos/style.css')
-    script(src='https://code.jquery.com/jquery-1.12.4.js')
-    script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
     script.
 
-      $(window).resize(function(){location.reload();}); 
+      $(window).resize(function(){location.reload();console.log("resized");}); 
       $(document).ready(function() {
       $("#menubutton").mousin(function() {
       $("#mobilemenu").show();
@@ -26,10 +22,8 @@ html
       $("#mobilemenu").slideToggle();
       });
       });
-      $( function() {
-      $( "#datepicker" ).datepicker();
-      } );
       
+
   body
     #container
       .header
