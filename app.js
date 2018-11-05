@@ -8,11 +8,12 @@ const path = require('path');
 const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
 app.use(express.static("images"));
+//app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
     user: 'isabelle_1',
-    password: 'TheHorse18',
+    password: 'Realt18',
     database: 'isabelle_db',
     port: 3306
 });
@@ -29,13 +30,68 @@ db.connect((err) => {
 var steps = require("./models/steps.json");
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//passport    http://www.passportjs.org/docs/username-password/
+var passport = require('passport');
+var LocalStrategy   = require('passport-local').Strategy;
+
+
+
+//var flash = require('flash');
+app.use(passport.initialize());
+app.use(passport.session());
+//app.use(flash());
+require('./config/passport')(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 //home page
 app.get('/', function(req, res) {
     res.render('index', { root: VIEWS });
     console.log('now you are home');
     
 });
+app.use(passport.initialize());
+app.use(passport.session());
 
+//app.post('/register', passport.authenticate('local-signup'), userResponse);
+
+//app.post('/login', passport.authenticate('local-login'), userResponse);
+
+app.get('/logout', (req, res)=>{
+req.logout();
+return res.json({status:'success'});
+});
+
+//passport routes
+app.get('/login',
+  function(req, res){
+    res.render('login', { root: VIEWS });
+    console.log('now you are on te login page');
+  });
+  
+app.post('/login', 
+  passport.authenticate('local-login', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+  
+app.post('/register', 
+  passport.authenticate('local-signup', { failureRedirect: '/register' }),
+   
+  function(req, res) {
+      console.log("register -local-signup");
+    res.redirect('/');
+  });
+app.get('/logout',
+  function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
+app.get('/profile',
+  require('connect-ensure-login').ensureLoggedIn(),
+  function(req, res){
+    res.render('profile', { user: req.user });
+  });
 
 //classes page
 app.get('/classes', function(req, res) {
@@ -766,6 +822,8 @@ function recalibrate() {
 // End JSON
 //end of json manipulation
 
+////////--------------Passport
+// expose this function to our app using module.exports
 
 
 

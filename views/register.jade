@@ -4,14 +4,30 @@ block content
         .formHold
           h1.itemtitle Register
           form(method = "POST")
-            fieldset
-              label(for= "name") Name:
-              input(name= "name", type = "text", placeholder = "enter name", required) 
-              label(for= "email") Email:
+
+              label(for= "firstname") first name:
+              input(name= "firstname", type = "text", placeholder = " firstname", required) 
+              label(for= "lastname") last name:
+              input(name= "lastname", type ="text", placeholder = "lastname", required)
+              label(for= "datejoined") date joined:
+              input(name= "datejoined", type = "date", placeholder = "date joined") 
+              label(for= "comments") comments:
+              input(name= "comments", type ="text", placeholder = "comments")
+              label(for= "email") email:
               input(name= "email", type = "text", pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", placeholder = "enter email", required)
               label(for= "password") Password:
               input(name= "password", type = "text", placeholder = "enter password", required)
-              label(for= "role") Password:
-              input(name= "role", type = "text", placeholder = "admin")
-              
-              button.button(type="submit") Create the account
+              br
+              label(for= "role") role:
+              input(type='radio', name='role', value='student', checked='')
+              |  student
+              input(type='radio', name='role', value='teacher')
+              |  teacher
+              br
+              label(for= "active") active:
+              input(type='radio', name='active', value='active', checked='')
+              |  active
+              input(type='radio', name='active', value='inactive')
+              |  inactive
+              br
+              button.button(type="submit") Create the user
