@@ -3,6 +3,9 @@ block content
       .maincontent
         .intro
           p
+            
+            if req
+              p You're logged in as #{req.user.userFirstName} 
             | Welcome to my Dance Class Helper app
             | This is where you will find all the notes about the past classes you have attended.
             | Just login and browse to the classes

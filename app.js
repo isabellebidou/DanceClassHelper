@@ -52,6 +52,14 @@ app.get('/', function(req, res) {
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
 //app.post('/register', passport.authenticate('local-signup'), userResponse);
 
 //app.post('/login', passport.authenticate('local-login'), userResponse);
@@ -65,13 +73,16 @@ return res.json({status:'success'});
 app.get('/login',
   function(req, res){
     res.render('login', { root: VIEWS });
-    console.log('now you are on te login page');
+    console.log('now you are on the login page');
   });
   
 app.post('/login', 
   passport.authenticate('local-login', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+
+      console.log(req.user.userRole);
+    //res.redirect('/');
+    res.render('index', { root: VIEWS, req });
   });
   
 app.post('/register', 
@@ -95,6 +106,7 @@ app.get('/profile',
 
 //classes page
 app.get('/classes', function(req, res) {
+    
 
     let sql = 'SELECT * FROM classes'
     let query = db.query(sql, (err, res1) => {

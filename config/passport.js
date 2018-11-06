@@ -1,3 +1,5 @@
+//https://gist.github.com/manjeshpv/84446e6aa5b3689e8b84
+
 // config/passport.js
 
 // load all the things we need
@@ -94,7 +96,7 @@ module.exports = function(passport) {
     },
     function(req, email, password, done) { // callback with email and password from our form
  console.log("local-login");
-         let query = db.query("SELECT userEmail, userPassword FROM `danceclassusers` WHERE `userEmail` = '" + email + "'",function(err,rows){
+         let query = db.query("SELECT userFirstName, userEmail, userPassword, userRole FROM `danceclassusers` WHERE `userEmail` = '" + email + "'",function(err,rows){
 			if (err)
                 return done(err);
 			 if (!rows.length) {
@@ -106,7 +108,9 @@ module.exports = function(passport) {
                 return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 
             // all is well, return successful user
+            console.log("logged in "+rows[0].userEmail+ "role: "+rows[0].userRole);
             return done(null, rows[0]);
+          // return rows[0];
 
 		});
 
