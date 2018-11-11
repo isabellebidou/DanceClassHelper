@@ -30,39 +30,97 @@ html
         .imhold
           img#logo.logoimg(alt='logo', src='/logowhiteresized.png')
         h1.headertitle My Dance Classes Helper
+        if req
+              p.username You're logged in as #{req.user.userFirstName} 
+              unless  req.session.email == "student" 
+              p.userrole  #{req.user.userRole}
         .navhold
-          .topnav
-            a(href='/') Home
-            a(href='/classes') Classes
-            a(href='/createclass') add Classes
-            a(href='/steps') steps
-            a(href='/addstep') add steps
-            a(href='/students') Students
-            a(href='/createstudent') add Students
-            a(href='/login') Login
-            a(href='/register') Register
-            a(href='/logout') Logout
+          if req
+            if req.session.user == "teacher"
+              .topnav
+                a(href='/') Home
+                a(href='/classes') Classes
+                a(href='/createclass') add Classes
+                a(href='/steps') steps
+                a(href='/addstep') add steps
+                a(href='/students') Students
+                a(href='/createuser') add Students
+                a(href='/login') Login
+                a(href='/register') Register
+                a(href='/logout') Logout
+            else
+              .topnav
+                a(href='/') Home
+                a(href='/classes') Classes
+                a(href='/steps') steps
+                a(href='/login') Login
+                a(href='/register') Register
+                a(href='/logout') Logout
+                
+              
+          else
+            
+              .topnav
+                a(href='/') Home
+                a(href='/login') Login
+                a(href='/register') Register
+                a(href='/logout') Logout
+            
       block content
       button#menubutton
+      
         | menu
-      #mobilemenu
-        ul#mobilemenuul
-          li
-            a.mobilemenuli(href='/') Home
-          li
-            a.mobilemenuli(href='/classes') Classes
-          li
-            a.mobilemenuli(href='/createclass') add Class
-          li
-            a.mobilemenuli(href='/students') Students
-          li
-            a.mobilemenuli(href='/createstudent') add Students
-          li
-            a.mobilemenuli(href='/login') Login
-          li
-            a.mobilemenuli(href='/register') Register
-          li
-            a.mobilemenuli(href='/logout') Logout
+        #mobilemenu
+        
+          ul#mobilemenuul
+            if req 
+              if req.user.userRole == "teacher"
+          
+                li
+                  a.mobilemenuli(href='/') Home
+                li
+                  a.mobilemenuli(href='/classes') Classes
+                li
+                  a.mobilemenuli(href='/createclass') add Class
+                li
+                  a.mobilemenuli(href='/students') Students
+                li
+                  a.mobilemenuli(href='/createuser') add Students
+                li
+                  a.mobilemenuli(href='/steps') Steps
+                li
+                  a.mobilemenuli(href='/addstep') Add Step
+                li
+                  a.mobilemenuli(href='/login') Login
+                li
+                  a.mobilemenuli(href='/register') Register
+                li
+                  a.mobilemenuli(href='/logout') Logout
+              else
+
+                li
+                  a.mobilemenuli(href='/') Home
+                li
+                  a.mobilemenuli(href='/classes') Classes
+                li
+                  a.mobilemenuli(href='/steps') Steps
+                li
+                  a.mobilemenuli(href='/login') Login
+                li
+                  a.mobilemenuli(href='/register') Register
+                li
+                  a.mobilemenuli(href='/logout') Logout
+            else
+
+              li
+                a.mobilemenuli(href='/') Home
+              li
+                a.mobilemenuli(href='/login') Login
+              li
+                a.mobilemenuli(href='/register') Register
+              li
+                a.mobilemenuli(href='/logout') Logout
+        
      .footer
           p   Isabelle Bidou - copyright 2018
              

@@ -1,5 +1,6 @@
 var express = require("express"); // call expresss to be used by application
 var app = express();
+
 var mysql = require('mysql');// allow access to sql
 var bodyParser = require('body-parser');
 var fs = require("fs");
@@ -8,13 +9,18 @@ const path = require('path');
 const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
 app.use(express.static("images"));
+var session = require('express-session');
+app.use(express.session());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
-    host: 'isabellebidou.com',
-    user: 'isabelle_1',
-    password: 'Realt18',
-    database: 'isabelle_db',
+    host: ‘********.com',
+    user: ‘******',
+    password: ‘******',
+    database: ‘******',
     port: 3306
 });
 db.connect((err) => {
@@ -28,41 +34,31 @@ db.connect((err) => {
     }
 });
 var steps = require("./models/steps.json");
-app.use(bodyParser.urlencoded({ extended: true }));
 
+require('./config/passport')(passport);
 //passport    http://www.passportjs.org/docs/username-password/
 var passport = require('passport');
 var LocalStrategy   = require('passport-local').Strategy;
+//app.use(session({ secret: "topsecret" }));
+app.set('trust proxy', 1);
+app.use(session({
+  secret: 'topsecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
 
 
 
-//var flash = require('flash');
-app.use(passport.initialize());
-app.use(passport.session());
-//app.use(flash());
-require('./config/passport')(passport);
-app.use(passport.initialize());
-app.use(passport.session());
+
 //home page
 app.get('/', function(req, res) {
     res.render('index', { root: VIEWS });
     console.log('now you are home');
     
 });
-app.use(passport.initialize());
-app.use(passport.session());
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
 
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-
-//app.post('/register', passport.authenticate('local-signup'), userResponse);
-
-//app.post('/login', passport.authenticate('local-login'), userResponse);
 
 app.get('/logout', (req, res)=>{
 req.logout();
@@ -79,27 +75,18 @@ app.get('/login',
 app.post('/login', 
   passport.authenticate('local-login', { failureRedirect: '/login' }),
   function(req, res) {
-
+    req.session.email = req.user.userRole;
       console.log(req.user.userRole);
+      console.log("req.session.email: "+req.session.email);
     //res.redirect('/');
     res.render('index', { root: VIEWS, req });
   });
   
-app.post('/register', 
-  passport.authenticate('local-signup', { failureRedirect: '/register' }),
-   
-  function(req, res) {
-      console.log("register -local-signup");
-    res.redirect('/');
-  });
-app.get('/logout',
-  function(req, res){
-    req.logout();
-    res.redirect('/');
-  });
+
+
 
 app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
+  
   function(req, res){
     res.render('profile', { user: req.user });
   });
@@ -111,8 +98,8 @@ app.get('/classes', function(req, res) {
     let sql = 'SELECT * FROM classes'
     let query = db.query(sql, (err, res1) => {
         if (err) throw err;
-        console.log(res1);
-
+        //console.log(res1);
+ console.log("classes req.session.email: "+req.session.email);
         res.render('classes', { root: VIEWS, res1 });
     });
     console.log('now you are on classes');
@@ -163,6 +150,14 @@ app.get('/register', function(req, res) {
         console.log('now you ready to register');
 
 });
+
+app.post('/register', 
+  passport.authenticate('local-register', { failureRedirect: '/register' }),
+   
+  function(req, res) {
+      console.log("register -local-register");
+    res.redirect('/');
+  });
 
 //step page
 app.get('/step', function(req, res) {
@@ -302,7 +297,7 @@ app.post('/createclass', function(req, res) {
 
 });
 
-app.get('/editclass/:id', function(req, res) {
+app.get('/editclass/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
     let sql = 'SELECT * FROM classes WHERE classId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
@@ -323,7 +318,7 @@ app.post('/editclass/:id', function(req, res) {
 });
 
 
-app.get('/deleteclass/:id', function(req, res) {
+app.get('/deleteclass/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
     
         let sql = 'DELETE FROM classes WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
@@ -336,26 +331,36 @@ app.get('/deleteclass/:id', function(req, res) {
 //--------------------------USER
 
 //createuser page
-app.get('/createstudent', function(req, res) {
+app.get('/createuser', function(req, res) {
 
-        res.render('createstudent', { root: VIEWS });
-        console.log('now you ready to create a student');
+        res.render('createuser', { root: VIEWS });
+        console.log('now you ready to create a user');
 
 });
 
-//add entry to users table on post on button press
-app.post('/createstudent', function(req, res1) {
+//add entry to users table on post on button press ** old **
+// app.post('/createstudent', function(req, res1) {
+    
 
-    let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
-    let query = db.query(sql, (err, res) => {
-        if (err) throw err;
+//     let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
+//     let query = db.query(sql, (err, res) => {
+//         if (err) throw err;
 
-    });
-    //res1.render('students', { root: VIEWS });
-    res1.redirect('/students');
+//     });
+//     //res1.render('students', { root: VIEWS });
+//     res1.redirect('/students');
    
 
-});
+// });
+
+//add entry to users table on post on button press ** new **
+app.post('/createuser', 
+  passport.authenticate('local-signup', { failureRedirect: '/createuser' }),
+   
+  function(req, res) {
+      console.log("createuser -local-signup");
+    res.redirect('/');
+  });
 
 //edit data of  muscle table entry on post on button press
 app.get('/editstudent/:id', function(req, res) {
@@ -378,7 +383,13 @@ app.post('/editstudent/:id', function(req, res) {
 
 });
 
-
+// app.post('/editstudent/:id',  passport.authenticate('local-updateuser', { failureRedirect: '/' }),
+   
+//   function(req, res) {
+//       console.log("editstudent -local-updateuser");
+//     res.redirect('/students');
+//   });
+  
 app.get('/deletestudent/:id', function(req, res) {
     
         let sql = 'DELETE FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
@@ -438,7 +449,7 @@ app.get('/deleteuserroles/:id', function(req, res) {
 
 
 //add entry to userroles table on post on button press
-app.post('/creatcart', function(req, res) {
+app.post('/creatcart', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
 
     let sql = 'INSERT INTO cart (cartDate,cartStatus,cartTotal,cartUserId) VALUES ("' + req.body.cartdate + '","' + req.body.cartstatus + req.body.carttotal + '","' + req.body.cartuserid +'");'
 
@@ -450,7 +461,7 @@ app.post('/creatcart', function(req, res) {
 });
 
 //edit data of  muscle table entry on post on button press
-app.get('/editcart/:id', function(req, res) {
+app.get('/editcart/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
     let sql = 'SELECT * FROM cart WHERE cartId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
@@ -471,7 +482,7 @@ app.post('/editcart/:id', function(req, res) {
 });
 
 
-app.get('/deletecart/:id', function(req, res) {
+app.get('/deletecart/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
     
         let sql = 'DELETE FROM cart WHERE cartId = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
@@ -482,9 +493,8 @@ app.get('/deletecart/:id', function(req, res) {
 });
 
 
+// ------------------------------------------TODO... to implement
 
-
-//add entry to userroles table on post on button press
 app.post('/createstepfamily', function(req, res) {
 
     let sql = 'INSERT INTO stepFamily (stepFamilyId,stepFamilyName) VALUES ("' + req.body.stepfamilyid + '","' + req.body.stepfamilyname +'");'
@@ -496,7 +506,7 @@ app.post('/createstepfamily', function(req, res) {
     res.render('index', { root: VIEWS });
 });
 
-//edit data of  muscle table entry on post on button press
+
 app.get('/editstepfamily/:id', function(req, res) {
     let sql = 'SELECT * FROM stepFamily WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
@@ -528,7 +538,7 @@ app.get('/deletestepfamily/:id', function(req, res) {
 
 });
 
-//add entry to stepCategory table on post on button press
+
 app.post('/createstepcategory', function(req, res) {
 
     let sql = 'INSERT INTO stepCategory (stepCategoryId,stepCategoryName) VALUES ("' + req.body.stepcategoryid + '","' + req.body.stepcategoryname +'");'
@@ -542,7 +552,7 @@ app.post('/createstepcategory', function(req, res) {
 
 });
 
-//edit data of  stepcategory table entry on post on button press
+
 app.get('/editstepcategory/:id', function(req, res) {
     let sql = 'SELECT * FROM stepCategory WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
@@ -575,7 +585,7 @@ app.get('/deletestepcategory/:id', function(req, res) {
 });
 
 
-//add entry to userroles table on post on button press
+
 app.post('/createstepzillpattern', function(req, res) {
 
     let sql = 'INSERT INTO stepZillPattern (stepZillPatterId,stepZillPatterName) VALUES ("' + req.body.stepzillpatternid + '","' + req.body.stepzillpatternname +'");'
@@ -588,7 +598,7 @@ app.post('/createstepzillpattern', function(req, res) {
     res.render('stepzillpatterns', { root: VIEWS });
 });
 
-//edit data of  muscle table entry on post on button press
+
 app.get('/editstepzillpattern/:id', function(req, res) {
     let sql = 'SELECT * FROM stepZillPattern WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
@@ -619,7 +629,7 @@ app.get('/deletestepzillpattern/:id', function(req, res) {
         });
 
 });
-//add entry to users table on post on button press
+
 app.post('/createstep', function(req, res) {
 
     let sql = 'INSERT INTO step (stepName,stepFamilyId,stepCategoryId,stepZillPatternId,stepComments,stepLink) VALUES ("' + req.body.stepname + '","' + req.body.stepfamilyid + '","' + req.body.stepcategoryid + '","' + req.body.stepzillpatternid + '","' + req.body.stepcomments + '","' + req.body.steplink + '");'
@@ -632,7 +642,7 @@ app.post('/createstep', function(req, res) {
     res.render('steps', { root: VIEWS });
 });
 
-//edit data of  muscle table entry on post on button press
+
 app.get('/editstep/:id', function(req, res) {
     let sql = 'SELECT * FROM steps WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
@@ -663,6 +673,8 @@ app.get('/deletestep/:id', function(req, res) {
         });
 
 });
+
+//-------------------------------END OF TODO
 
 app.get('/step/:id', function(req, res) { 
     
@@ -697,7 +709,7 @@ app.get('/queryme', function(req,res){
 });
 
 
-//----------------------------------
+
 //-------------------------------------json manipulation: STEPS
 app.get('/addstep', function(req, res) {
 
@@ -819,7 +831,7 @@ app.get("/deletestep/:id", function(req, res) {
     }
 
 });
-// this is used after you delete a step to keep numbers in order
+// this is used after you delete a step to keep numbers in order  ... NOT USED CURRENTLY
 function recalibrate() {
 
     var x = 0;
@@ -834,8 +846,6 @@ function recalibrate() {
 // End JSON
 //end of json manipulation
 
-////////--------------Passport
-// expose this function to our app using module.exports
 
 
 

@@ -66,6 +66,7 @@ h1,h2{
     top:1%;
     
 }
+
 .maincontent{
     color:white;
     position: absolute;
@@ -76,6 +77,30 @@ h1,h2{
     overflow-y: scroll;
     padding: 1em;
     background-color: rgba(77, 77, 77,0.5);
+}
+.userrole{
+    position: absolute;
+    top:1em;
+    right:2em;
+    color: #7f5f87;
+    text-align: center;
+    padding: 1em;
+    text-decoration: none;
+    font-size: 1.5em;
+    font-style: oblique;
+    
+}
+.username{
+    position: absolute;
+    top:0.5em;
+    right:2em;
+    color: #7f5f87;
+    text-align: center;
+    padding:1em;
+    text-decoration: none;
+    font-size: 1em;
+    font-style: oblique;
+    
 }
 p{
     padding-top: 1em;
