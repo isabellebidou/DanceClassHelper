@@ -4,18 +4,27 @@
 
 // load all the things we need
 
+// config/passport.js
+				
+// load all the things we need
 var passport = require('passport');
+var LocalStrategy   = require('passport-local').Strategy;
+// //passport    http://www.passportjs.org/docs/username-password/
+
+// app.use(passport.initialize());
+// app.use(passport.session());
+var LocalStrategy   = require('passport-local').Strategy;
 var session = require('express-session');
-var LocalStrategy = require('passport-local').Strategy;
+
 
 
 var mysql = require('mysql');
 
 const db = mysql.createConnection({
-    host: ‘********.com',
-    user: ‘******',
-    password: ‘******',
-    database: ‘******',
+    host: 'isabellebidou.com',
+    user: 'isabelle_1',
+    password: 'Realt18',
+    database: 'isabelle_db',
     port: 3306
 });
 
@@ -45,17 +54,17 @@ module.exports = function(passport) {
 
     
     
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function(id, done) {
+// passport.serializeUser(function(user, done) {
+//   done(null, user);
+// });
+// passport.deserializeUser(function(id, done) {
 
     
-    db.query("select * from danceclassusers where id = "+id,function(err,rows){	
-			done(err, rows[0]);
-		});
+//     db.query("select * from danceclassusers where id = "+id,function(err,rows){	
+// 			done(err, rows[0]);
+// 		});
 
-});
+// });
     
      	// =========================================================================
     // LOCAL Self_SIGNUP ============================================================
@@ -87,27 +96,65 @@ passport.use('local-register', new LocalStrategy({
 			    
 			 if (rows.length) {
 			     console.log("email is already taken");
-                return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                //return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                return done(null, false);
             } else {
                 console.log("else");
 				// if there is no user with that email
                 // create the user
-                var newUserMysql = new Object();
-                console.log("new object");
-                console.log("email :"+ email);
-				newUserMysql.email    = email;
-                newUserMysql.password = password; // use the generateHash function in our user model
-                
-                var datejoined = new Date().getDate();
+               
+                //var datejoined = new Date();
+                var d = new Date();
+                var datejoined = "";
+
+                    var y = addZero(d.getFullYear(), 4);
+                    var mo = addZero(d.getMonth() + 1, 2);// javascript getMonth() starts at 0
+                    var da = addZero(d.getDate(), 2);
+                    
+                    datejoined  = y + "-" + mo + "-" + da;
                 var active = "inactive";
                 var role= "student"
-                 let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + datejoined + '","' + req.body.comments + '","' + email + '","' + password + '","' + role +  '","' + active + '");'
+                 var newUserMysql = new Object();
+                console.log("new object");
+                console.log("email :"+ email);
+                newUserMysql.userFirstName = req.body.firstname;
+				newUserMysql.userEmail    = email;
+                newUserMysql.userPassword = password; 
+                newUserMysql.userRole = role;
+                 let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + datejoined + '","' + req.body.comments + '","' + email + '","' + password + '","' + role +  '","' + active + '");';
 				//var insertQuery = "INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
 					console.log(sql);
-				let query = db.query(sql,function(err,rows){
-				newUserMysql.id = rows.insertId;
+				// let query = db.query(sql,function(err,rows){
+				// newUserMysql.id = rows.insertId;
 
-				return done(null, newUserMysql);
+				// return done(null, newUserMysql);
+				// });
+				
+				let query = db.query(sql,function(err,rows){
+				newUserMysql.userId = rows.insertId;
+				
+				console.log(rows.insertId);
+				if (err){throw err};
+				let sql2 = 'SELECT * FROM danceclassusers WHERE userId = '+rows.insertId+';'
+				console.log(sql2);
+				let query2 = db.query(sql2, function(err, rows){
+				    if (err){throw err};
+				    const user = rows;
+				    console.log(rows);
+				    req.login(newUserMysql, function(err, rows){
+				        if (err){
+				            throw err
+				            
+				        };
+				        
+				        console.log(newUserMysql.userId);
+				        return done(null, newUserMysql);
+				    });
+				    
+				});
+				
+
+				
 				});
             }
 		});
@@ -149,18 +196,32 @@ passport.use('local-signup', new LocalStrategy({
                 console.log("else");
 				// if there is no user with that email
                 // create the user
-                var newUserMysql = new Object();
-                console.log("new object");
-                console.log("email :"+ email);
-				newUserMysql.email    = email;
-                newUserMysql.password = password; // use the generateHash function in our user model
+                //var newUserMysql = new Object();
+                //console.log("new object");
+                //console.log("email :"+ email);
+				//newUserMysql.email    = email;
+                //newUserMysql.password = password; // use the generateHash function in our user model
                  let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + email + '","' + password + '","' + req.body.role +  '","' + req.body.active + '");'
 				//var insertQuery = "INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
 					console.log(sql);
-				let query = db.query(sql,function(err,rows){
-				newUserMysql.id = rows.insertId;
+				let query = db.query(sql,function(err,results,fields){
+				//newUserMysql.id = rows.insertId;
+				
+				
+				if (err){throw err};
+				
+				db.query('SELECT LAST_INSERT_ID() as user_id'), function(err, results, fields){
+				    if (err){throw err};
+				    const user_id = results[0];
+				    console.log(results[0]);
+				    req.login(user_id, function(err){
+				        return done(null, user_id);
+				    })
+				    
+				}
+				
 
-				return done(null, newUserMysql);
+				
 				});
             }
 		});
@@ -213,25 +274,27 @@ passport.use('local-updateuser', new LocalStrategy({
     },
     function(req, email, password,done) { // callback with email and password from our form
     console.log("local-login");
-         let query = db.query("SELECT userFirstName, userEmail, userPassword, userRole FROM `danceclassusers` WHERE `userEmail` = '" + email + "'",function(err,rows){
+         let query = db.query("SELECT userId, userFirstName, userEmail, userPassword, userRole FROM `danceclassusers` WHERE `userEmail` = '" + email + "'",function(err,rows){
 			if (err)
                 return done(err);
 			 if (!rows.length) {
 			 console.log("No user found");
-                return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+                return done(null, false); 
             }
 
 			// if the user is found but the password is wrong
             if (!( rows[0].userPassword == password)){
                  console.log("Oops! Wrong password");
-                return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                return done(null, false); 
             }
                 
 
             // all is well, return successful user
             console.log("logged in "+rows[0].userEmail+ "  role: "+rows[0].userRole);
-            return done(null, rows[0]);
+           // return done(null, rows[0]);
           // return rows[0];
+          return done(null, rows[0]);
+          				    
 
 		});
 
@@ -240,6 +303,27 @@ passport.use('local-updateuser', new LocalStrategy({
     }));
     
     
+    
+passport.serializeUser(function(user, done) {
+    console.log("serialize");
+    console.log(user);
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+console.log("deserialize");
+console.log(user);
+    
+   // db.query("select * from danceclassusers where userId = "+user.userId,function(err,rows){	
+			done(null, user);
+//		});
 
+});
 
 };
+
+function addZero(x, n) {
+                    if (x.toString().length < n) {
+                           x = "0" + x;
+                    }
+                    return x;
+}

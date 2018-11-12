@@ -30,13 +30,14 @@ html
         .imhold
           img#logo.logoimg(alt='logo', src='/logowhiteresized.png')
         h1.headertitle My Dance Classes Helper
-        if req
-              p.username You're logged in as #{req.user.userFirstName} 
-              unless  req.session.email == "student" 
-              p.userrole  #{req.user.userRole}
+        if isAuthenticated
+              //p.username You're logged in as #{session.user.userFirstName} 
+              
+              //unless userRole == "student" 
+              p.userrole  #{user.userRole}
         .navhold
-          if req
-            if req.session.user == "teacher"
+          if isAuthenticated
+            if user.userRole == "teacher"
               .topnav
                 a(href='/') Home
                 a(href='/classes') Classes
@@ -45,26 +46,21 @@ html
                 a(href='/addstep') add steps
                 a(href='/students') Students
                 a(href='/createuser') add Students
-                a(href='/login') Login
-                a(href='/register') Register
                 a(href='/logout') Logout
             else
               .topnav
                 a(href='/') Home
                 a(href='/classes') Classes
                 a(href='/steps') steps
-                a(href='/login') Login
-                a(href='/register') Register
                 a(href='/logout') Logout
                 
               
           else
-            
-              .topnav
+            .topnav
                 a(href='/') Home
                 a(href='/login') Login
                 a(href='/register') Register
-                a(href='/logout') Logout
+                
             
       block content
       button#menubutton

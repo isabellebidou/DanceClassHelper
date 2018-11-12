@@ -1,7 +1,8 @@
 var express = require("express"); // call expresss to be used by application
 var app = express();
-
+var passport = require("passport")
 var mysql = require('mysql');// allow access to sql
+//var flash = require("flash");
 var bodyParser = require('body-parser');
 var fs = require("fs");
 var behaviour = require('./behaviour.js');
@@ -9,18 +10,19 @@ const path = require('path');
 const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
 app.use(express.static("images"));
+//app.use(flash);
 var session = require('express-session');
-app.use(express.session());
-app.use(passport.initialize());
-app.use(passport.session());
+var MySQLStore = require('express-mysql-session')(session);
+//app.use(session);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
-    host: ‘********.com',
-    user: ‘******',
-    password: ‘******',
-    database: ‘******',
+    host: 'isabellebidou.com',
+    user: 'isabelle_1',
+    password: 'Realt18',
+    database: 'isabelle_db',
     port: 3306
 });
 db.connect((err) => {
@@ -37,32 +39,68 @@ var steps = require("./models/steps.json");
 
 require('./config/passport')(passport);
 //passport    http://www.passportjs.org/docs/username-password/
-var passport = require('passport');
+
+
 var LocalStrategy   = require('passport-local').Strategy;
 //app.use(session({ secret: "topsecret" }));
+
+var options = {
+    host: 'isabellebidou.com',
+    user: 'isabelle_1',
+    password: 'Realt18',
+    database: 'isabelle_db',
+    port: 3306
+};
+var sessionStore = new MySQLStore(options);
 app.set('trust proxy', 1);
 app.use(session({
-  secret: 'topsecret',
+  secret: 'qwertys',
+  store: sessionStore,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { secure: true }
 }));
 
-
-
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(function(req,res,next){
+    res.locals.isAuthenticated= req.isAuthenticated();
+    next();
+});
+app.use(function(req,res,next){
+    res.locals.user = req.user;
+    next();
+});
 
 //home page
 app.get('/', function(req, res) {
-    res.render('index', { root: VIEWS });
+        console.log("index ");
+    console.log("req.user "+req.user);
+
+    console.log("req.isAuthenticated() "+req.isAuthenticated());
+    console.log("req.session "+req.session);
+    if (req.isAuthenticated()){
+        console.log(req.user.userRole);
+        res.render('index', { root: VIEWS, req });
+    }else{
+        res.render('index', { root: VIEWS });
+    }
+    
     console.log('now you are home');
     
 });
 
 
 
-app.get('/logout', (req, res)=>{
+app.get('/logout', function(req, res){
 req.logout();
-return res.json({status:'success'});
+req.session.destroy();
+    console.log("logout ");
+    console.log("req.user "+req.user);
+    
+    console.log("req.isAuthenticated() "+req.isAuthenticated());
+    console.log("req.session "+req.session);
+res.redirect('/');
 });
 
 //passport routes
@@ -75,24 +113,29 @@ app.get('/login',
 app.post('/login', 
   passport.authenticate('local-login', { failureRedirect: '/login' }),
   function(req, res) {
-    req.session.email = req.user.userRole;
-      console.log(req.user.userRole);
-      console.log("req.session.email: "+req.session.email);
+    //req.session.email = req.user.userRole;
+      //console.log(req.user.userRole);
+      //console.log("req.session.email: "+req.session.email);
     //res.redirect('/');
+    console.log("login ");
+    console.log("req.user "+req.user);
+    console.log("req.user.userRole "+req.user.userRole);
+    console.log("req.isAuthenticated() "+req.isAuthenticated());
+    console.log("req.session "+req.session);
     res.render('index', { root: VIEWS, req });
   });
   
 
 
 
-app.get('/profile',
+app.get('/profile',authenticationMiddleware (),
   
   function(req, res){
     res.render('profile', { user: req.user });
   });
 
 //classes page
-app.get('/classes', function(req, res) {
+app.get('/classes', authenticationMiddleware (),function(req, res) {
     
 
     let sql = 'SELECT * FROM classes'
@@ -105,7 +148,7 @@ app.get('/classes', function(req, res) {
     console.log('now you are on classes');
 });
 //students page
-app.get('/students', function(req, res) {
+app.get('/students', authenticationMiddleware (),function(req, res) {
 
     let sql = 'select * FROM danceclassusers ; '
     let query = db.query(sql, (err, res1) => {
@@ -156,6 +199,8 @@ app.post('/register',
    
   function(req, res) {
       console.log("register -local-register");
+      console.log(req.user);
+      console.log(req.isAuthenticated());
     res.redirect('/');
   });
 
@@ -297,7 +342,7 @@ app.post('/createclass', function(req, res) {
 
 });
 
-app.get('/editclass/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
+app.get('/editclass/:id', authenticationMiddleware (),function(req, res) {
     let sql = 'SELECT * FROM classes WHERE classId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
@@ -318,7 +363,7 @@ app.post('/editclass/:id', function(req, res) {
 });
 
 
-app.get('/deleteclass/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
+app.get('/deleteclass/:id', authenticationMiddleware (), function(req, res) {
     
         let sql = 'DELETE FROM classes WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
@@ -331,7 +376,7 @@ app.get('/deleteclass/:id', require('connect-ensure-login').ensureLoggedIn(),fun
 //--------------------------USER
 
 //createuser page
-app.get('/createuser', function(req, res) {
+app.get('/createuser', authenticationMiddleware (),function(req, res) {
 
         res.render('createuser', { root: VIEWS });
         console.log('now you ready to create a user');
@@ -363,7 +408,7 @@ app.post('/createuser',
   });
 
 //edit data of  muscle table entry on post on button press
-app.get('/editstudent/:id', function(req, res) {
+app.get('/editstudent/:id', authenticationMiddleware (), function(req, res) {
     let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
@@ -390,7 +435,7 @@ app.post('/editstudent/:id', function(req, res) {
 //     res.redirect('/students');
 //   });
   
-app.get('/deletestudent/:id', function(req, res) {
+app.get('/deletestudent/:id', authenticationMiddleware (),function(req, res) {
     
         let sql = 'DELETE FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
@@ -848,6 +893,18 @@ function recalibrate() {
 
 
 
+//--------------------------------https://youtu.be/gTowbsNPp9I
+//--------------------------------https://gist.github.com/christopher4lis/f7121a07740e5dbca860c9beb2910565
+
+
+function authenticationMiddleware () {  
+	return (req, res, next) => {
+		console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
+
+	    if (req.isAuthenticated()) return next();
+	    res.redirect('/login')
+	}
+}
 
 
 
