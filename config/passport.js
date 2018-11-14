@@ -21,10 +21,10 @@ var session = require('express-session');
 var mysql = require('mysql');
 
 const db = mysql.createConnection({
-    host: 'isabellebidou.com',
-    user: 'isabelle_1',
-    password: 'Realt18',
-    database: 'isabelle_db',
+    host: ‘********.com',
+    user: ‘******',
+    password: ‘******',
+    database: ‘******',
     port: 3306
 });
 

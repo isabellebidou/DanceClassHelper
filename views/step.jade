@@ -1,10 +1,10 @@
 extends layout
 script
-  | var ststr = url.split("&t=")[1];
-  | var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
-  | var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
-  | $('#player').attr('src', embedUrl)
-  | window.location.href = "#video";
+  // | var ststr = url.split("&t=")[1];
+  // | var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
+  // | var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
+  // | $('#player').attr('src', '#{step.embedurl}')
+  // | window.location.href = "#video";
 block content
       .maincontent
        h1.Step
@@ -15,22 +15,22 @@ block content
                
                 .item
                   h1.itemtitle #{step.name}
-                  iframe#player.centered(width='420', height='315', frameborder='0', allowfullscreen='')
-                  #id01
+                  iframe#player.centered(width='420', height='315', frameborder='0', allowfullscreen='', src='#{step.embedurl}' )
+                  //#id01
                   h2.itemtitle http://www.youtube.com/embed/#{step.id}
-                  //<iframe src="http://www.youtube.com/embed/#{step.id}"></iframe>
+                  //<iframe src="https://www.youtube.com/embed/IezoTI31Dl?start=3m15s"></iframe>
                   //<iframe src=#{step.embedurl}></iframe>
                   
-                  script
-                  | var ststr = url.split("&t=")[1];
-                  | var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
-                  | var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
-                  | $('#player').attr('src', embedUrl)
-                  | window.location.href = "#video";
+                  // script.
+                  // var ststr = url.split("&t=")[1];
+                  // var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
+                  // var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
+                  // $('#player').attr('src', embedUrl)
+                  //   window.location.href = "#video";
                   // script.
                   //   var ststr = url.split("&t=")[1];
                   //   console.log("there!!!!!!!!!!!!!!");
                   //   var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
-                  //   var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
+                  //   var embedUrl = "https://www.youtube.com/embed/" + id + "?start=" + st;
                   //   $('#player').attr('src', embedUrl)
                   //   window.location.href = "#video";

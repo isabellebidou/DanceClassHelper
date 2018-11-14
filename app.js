@@ -19,10 +19,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
-    host: 'isabellebidou.com',
-    user: 'isabelle_1',
-    password: 'Realt18',
-    database: 'isabelle_db',
+    host: ‘********.com',
+    user: ‘******',
+    password: ‘******',
+    database: ‘******',
     port: 3306
 });
 db.connect((err) => {
@@ -46,9 +46,9 @@ var LocalStrategy   = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: 'isabelle_1',
-    password: 'Realt18',
-    database: 'isabelle_db',
+    user: '******',
+    password: '*****',
+    database: '*****',
     port: 3306
 };
 var sessionStore = new MySQLStore(options);
@@ -111,7 +111,7 @@ app.get('/login',
   });
   
 app.post('/login', 
-  passport.authenticate('local-login', { failureRedirect: '/login' }),
+  passport.authenticate('local-login', { failureRedirect: '/login' , successRedirect: '/classes'}),
   function(req, res) {
     //req.session.email = req.user.userRole;
       //console.log(req.user.userRole);
@@ -122,7 +122,7 @@ app.post('/login',
     console.log("req.user.userRole "+req.user.userRole);
     console.log("req.isAuthenticated() "+req.isAuthenticated());
     console.log("req.session "+req.session);
-    res.render('index', { root: VIEWS, req });
+    //res.render('index', { root: VIEWS, req });
   });
   
 
@@ -375,7 +375,7 @@ app.get('/deleteclass/:id', authenticationMiddleware (), function(req, res) {
 
 //--------------------------USER
 
-//createuser page
+//createuser page createuser
 app.get('/createuser', authenticationMiddleware (),function(req, res) {
 
         res.render('createuser', { root: VIEWS });
