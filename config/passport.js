@@ -20,13 +20,13 @@ var session = require('express-session');
 
 var mysql = require('mysql');
 
-const db = mysql.createConnection({
-    host: ‘********.com',
-    user: ‘******',
-    password: ‘******',
-    database: ‘******',
-    port: 3306
-});
+// const db = mysql.createConnection({
+//     host: 'isabellebidou.com',
+//     user: '******',
+//     password: '******',
+//     database: 'isabelle_db',
+//     port: 3306
+// });
 
 
 

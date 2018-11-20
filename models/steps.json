@@ -6,7 +6,7 @@
 "url": "https://www.youtube.com/watch?v=IezoTI31Dls&t=3m15s",
 "family": "Arabic",
 "category": "fast",
-"embedurl": "https://www.youtube.com/embed/IezoTI31Dl?start=3m15s"
+"start": "195"
 },
 {
 "index":2, 
@@ -14,7 +14,8 @@
 "name": "Arabic Hip Twist",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=3m55s ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "235"
 },
 {
 "index":3, 
@@ -22,7 +23,8 @@
 "name": "Arabic Hip Twist Half Turn  ",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=4m00s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "240"
 },
 {
 "index":4, 
@@ -30,7 +32,8 @@
 "name": "Arabic Hip Twist Flourish (AHTF)  ",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=2m29s  ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "149"
 },
 {
 "index":5, 
@@ -38,7 +41,8 @@
 "name": "AHTF Fade  ",
 "url": "www.youtube.com/watch?v=ZhJvBrsuw_w&t=2m35s  ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "155"
 },
 {
 "index":6, 
@@ -46,7 +50,8 @@
 "name": "AHTF Circle  ",
 "url": "www.youtube.com/watch?v=v34V0w7snwI&t=1m07s     ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "67"
 },
 {
 "index":7,     
@@ -54,7 +59,8 @@
 "name": "Arabic 1-2-3 ",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=2m50s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "170"
 },
 {
 "index":8, 
@@ -62,7 +68,8 @@
 "name": "Arabic Shimmy",
 "url": "www.youtube.com/watch?v=WQk7oeTCD2I&t=0m10s    ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "10"
 },
 {
 "index":9, 
@@ -70,7 +77,8 @@
 "name": "Arabic Shimmy with Arms and Turn (ASWAT)",
 "url": "www.youtube.com/watch?v=IezoTI31Dls&t=1m57s    ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "197"
 },
 {
 "index":10,     
@@ -78,7 +86,8 @@
 "name": "ASWAT Fade ",
 "url": "www.youtube.com/watch?v=IezoTI31Dls&t=2m04s    ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "124"
 },
 {
 "index":100,  
@@ -86,7 +95,8 @@
 "name": "ASWAT Circle ",
 "url": "www.youtube.com/watch?v=WQk7oeTCD2I&t=1m34s    ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "94"
 },
 {
 "index":11,  
@@ -94,7 +104,8 @@
 "name": "ASWAT Duet Combo",
 "url": "www.youtube.com/watch?v=ov3mNYtmhVA&t=0m22s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "22"
 },
 {
 "index":12,  
@@ -102,7 +113,8 @@
 "name": "Arabic Orbit",
 "url": "www.youtube.com/watch?v=WQk7oeTCD2I&t=1m10s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "70"
 },
 {
 "index":13,  
@@ -110,7 +122,8 @@
 "name": "Arabic Double Turn",
 "url": "www.youtube.com/watch?v=LuLMBKucJwo&t=1m59s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "199"
 },
 {
 "index":14,  
@@ -118,7 +131,8 @@
 "name": "Alabama Twister",
 "url": "www.youtube.com/watch?v=qtAkbm547W4&t=2m14s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "134"
 },
 {
 "index":15,  
@@ -126,7 +140,7 @@
 "name": "Dragonfly (+ Fade)",
 "url": "www.youtube.com/watch?v=UtrP3fmJjvQ&t=4m53s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "293"
 },
 {
 "index":16,  
@@ -134,7 +148,8 @@
 "name": "Arabic Do-Si-Do",
 "url": "www.youtube.com/watch?v=0JKMkCVhTmw&t=1m40s   ",
 "family": "Arabic",
-"category": "fast"
+"category": "fast",
+"start": "100"
 },
 {
 "index":17,  
@@ -142,7 +157,8 @@
 "name": "Egyptian Basic",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=2m53s ",
 "family": "Egyptian",
-"category": "fast"
+"category": "fast",
+"start": "173"
 },
 {
 "index":18,  
@@ -150,7 +166,8 @@
 "name": "Egyptian Half-Turn",
 "url": "www.youtube.com/watch?v=eHa57t9yZAw&t=2m12s ",
 "family": "Egyptian",
-"category": "fast"
+"category": "fast",
+"start": "132"
 },
 {
 "index":19,  
@@ -158,7 +175,8 @@
 "name": "Egyptian Full-Turn",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=3m04s ",
 "family": "Egyptian",
-"category": "fast"
+"category": "fast",
+"start": "184"
 },
 {
 "index":20,  
@@ -166,7 +184,8 @@
 "name": "The Triple Egyptian",
 "url": "www.youtube.com/watch?v=TLYsErMpc30&t=0m10s ",
 "family": "Egyptian",
-"category": "fast"
+"category": "fast",
+"start": "10"
 },
 {
 "index":21, 
@@ -174,7 +193,8 @@
 "name": "Pivot Bump",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=1m30s ",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "90"
 },
 {
 "index":22, 
@@ -182,7 +202,8 @@
 "name": "Choo-Choo",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=2m34s ",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "154"
 },
 {
 "index":23, 
@@ -190,7 +211,8 @@
 "name": "Pivot Bump Arc (Choo-Choo Arc / Arc Arms)",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=1m37s ",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "97"
 },
 {
 "index":24, 
@@ -198,7 +220,8 @@
 "name": "Choo-Choo Arc Arm Combo",
 "url": "www.youtube.com/watch?v=4yPxWTm6IH8&t=2m28s  ",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "148"
 },
 {
 "index":25, 
@@ -206,7 +229,8 @@
 "name": "Double Bump (Choo-Choo Doubles)",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=2m22s  ",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "142"
 },
 {
 "index":26, 
@@ -214,7 +238,8 @@
 "name": "Single Bump (Choo-Choo Singles)",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=2m30s ",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "150"
 },
 {
 "index":27, 
@@ -222,7 +247,8 @@
 "name": "Single Bump Half-Turn",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=2m38s ",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "158"
 },
 {
 "index":28, 
@@ -230,7 +256,8 @@
 "name": "Resham-Ka",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=3m37s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "217"
 },
 {
 "index":29, 
@@ -238,7 +265,8 @@
 "name": "Resham-ka Spin",
 "url": "www.youtube.com/watch?v=4yw5R10x_-Q&t=1m38s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "98"
 },
 {
 "index":30, 
@@ -246,7 +274,8 @@
 "name": "Reach and Sit",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=2m59s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "179"
 },
 {
 "index":31, 
@@ -254,7 +283,8 @@
 "name": "Up2 Down3",
 "url": "www.youtube.com/watch?v=hoTM5KEUySs&t=10m02s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "602"
 },
 {
 "index":32, 
@@ -262,7 +292,8 @@
 "name": "Chico Four Corners",
 "url": "www.youtube.com/watch?v=IezoTI31Dls&t=2m25s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "145"
 },
 {
 "index":33, 
@@ -270,7 +301,8 @@
 "name": "Chico Circle Up Combo ",
 "url": "www.youtube.com/watch?v=qtAkbm547W4&t=2m34s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "154"
 },
 {
 "index":34, 
@@ -278,7 +310,8 @@
 "name": "The Roundhouse ",
 "url": "www.youtube.com/watch?v=Eore-cmDevs&t=3m41s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "221"
 },
 {
 "index":35, 
@@ -286,7 +319,8 @@
 "name": "Double Back",
 "url": "www.youtube.com/watch?v=4yw5R10x_-Q&t=8m01s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "481"
 },
 {
 "index":36, 
@@ -294,7 +328,8 @@
 "name": "Double Back Half Turn",
 "url": "www.youtube.com/watch?v=4yw5R10x_-Q&t=8m08s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "488"
 },
 {
 "index":37, 
@@ -302,7 +337,8 @@
 "name": "Box Step",
 "url": "www.youtube.com/watch?v=1z3nmto4_eM&t=4m40s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "280"
 },
 {
 "index":38, 
@@ -310,7 +346,8 @@
 "name": "Triangle Step",
 "url": "www.youtube.com/watch?v=ZXJyS6lPkmo&t=0m35s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "35"
 },
 {
 "index":39, 
@@ -318,7 +355,8 @@
 "name": "Push Forward & Back",
 "url": "www.youtube.com/watch?v=ZXJyS6lPkmo&t=1m00s",
 "family": "Hip Bumps",
-"category": "fast"
+"category": "fast",
+"start": "60"
 },
 {
 "index":40, 
@@ -326,7 +364,8 @@
 "name": "Shimmy Step (Basic Shimmy)",
 "url": "www.youtube.com/watch?v=iNB-ej6qOHE&t=1m13s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "73"
 },
 {
 "index":41, 
@@ -334,7 +373,8 @@
 "name": "Turkish Shimmy",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=0m47s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "47"
 },
 {
 "index":42, 
@@ -342,7 +382,8 @@
 "name": "Turkish Shimmy Quarter turn",
 "url": "www.youtube.com/watch?v=iNB-ej6qOHE&t=1m19s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "79"
 },
 {
 "index":43, 
@@ -350,7 +391,8 @@
 "name": "Turkish Shimmy quarter turn fade",
 "url": "www.youtube.com/watch?v=iNB-ej6qOHE&t=1m26s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "170"
 },
 {
 "index":44, 
@@ -358,7 +400,8 @@
 "name": "Turkish Shimmy half turn",
 "url": "www.youtube.com/watch?v=Sa6mUMd_62o&t=4m06s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "246"
 },
 {
 "index":45, 
@@ -366,7 +409,8 @@
 "name": "Turkish Shimmy Cross-Over",
 "url": "www.youtube.com/watch?v=nXyXxeEB0Zs&t=0m10s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "10"
 },
 {
 "index":46, 
@@ -374,7 +418,8 @@
 "name": "Turkish Shimmy with arms and turns",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=0m52s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "52"
 },
 {
 "index":47, 
@@ -382,7 +427,8 @@
 "name": "TSWAT in circle",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=1m02s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "62"
 },
 {
 "index":48, 
@@ -390,7 +436,8 @@
 "name": "Reverse Shimmy",
 "url": "www.youtube.com/watch?v=WQk7oeTCD2I&t=0m54s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "54"
 },
 {
 "index":49, 
@@ -398,7 +445,8 @@
 "name": "Shoulder Shimmy hip drop",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=2m19s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "139"
 },
 {
 "index":50, 
@@ -406,7 +454,8 @@
 "name": "Ghawazee Shimmy Combo",
 "url": "www.youtube.com/watch?v=IezoTI31Dls&t=2m48s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "168"
 },
 {
 "index":51, 
@@ -414,7 +463,8 @@
 "name": "Sunanda",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=3m22s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "202"
 },
 {
 "index":52, 
@@ -422,7 +472,8 @@
 "name": "Sunnaanda Duet Combo",
 "url": "www.youtube.com/watch?v=qtAkbm547W4&t=1m24s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "84"
 },
 {
 "index":53, 
@@ -430,7 +481,8 @@
 "name": "Wet Dog",
 "url": "www.youtube.com/watch?v=f8Gg1TUGebo&t=0m50s",
 "family": "Shimmy",
-"category": "fast"
+"category": "fast",
+"start": "50"
 },
 {
 "index":54, 
@@ -438,7 +490,8 @@
 "name": "Spins",
 "url": "www.youtube.com/watch?v=OeQ3kOtmlTc&t=3m19s",
 "family": "Spins",
-"category": "fast"
+"category": "fast",
+"start": "199"
 },
 {
 "index":55, 
@@ -446,7 +499,8 @@
 "name": "Partner spins",
 "url": "www.youtube.com/watch?v=IezoTI31Dls&t=4m37s",
 "family": "Spins",
-"category": "fast"
+"category": "fast",
+"start": "277"
 },
 {
 "index":56, 
@@ -454,7 +508,8 @@
 "name": "Water Pot",
 "url": "www.youtube.com/watch?v=kx0UymsMRms&t=3m15s",
 "family": "Spins",
-"category": "fast"
+"category": "fast",
+"start": "195"
 },
 {
 "index":57, 
@@ -462,7 +517,8 @@
 "name": "Barrel Turn",
 "url": "www.youtube.com/watch?v=eHa57t9yZAw&t=0m33s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "33"
 },
 {
 "index":58, 
@@ -470,7 +526,8 @@
 "name": "Corkscrew Turn",
 "url": "www.youtube.com/watch?v=MAx_gmVIfuU&t=0m31s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "31"
 },
 {
 "index":59, 
@@ -478,7 +535,8 @@
 "name": "Propellor Turn",
 "url": "www.youtube.com/watch?v=eHa57t9yZAw&t=0m43s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "43"
 },
 {
 "index":60, 
@@ -486,7 +544,8 @@
 "name": "Reverse Turn",
 "url": "www.youtube.com/watch?v=IezoTI31Dls&t=0m53s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "53"
 },
 {
 "index":61,
@@ -494,7 +553,8 @@
 "name": "Sahra Turn ",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=6m46s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "406"
 },
 {
 "index":62,
@@ -502,7 +562,8 @@
 "name": "Wrap Around turn",
 "url": "www.youtube.com/watch?v=eHa57t9yZAw&t=1m04s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "64"
 },
 {
 "index":63,
@@ -510,7 +571,8 @@
 "name": "Wrap Around drop",
 "url": "www.youtube.com/watch?v=serKlFMp4YI&t=1m30s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "90"
 },
 {
 "index":64,
@@ -518,7 +580,8 @@
 "name": "Pulse Turn",
 "url": "www.youtube.com/watch?v=4zfB-8qHEX4&t=4m52s",
 "family": "Turns",
-"category": "slow"
+"category": "slow",
+"start": "292"
 },
 {
 "index":65,
@@ -526,7 +589,8 @@
 "name": "Arm Undulation",
 "url": "www.youtube.com/watch?v=eyNcSekIe-0&t=0m17s",
 "family": "Undulations",
-"category": "slow"
+"category": "slow",
+"start": "17"
 },
 {
 "index":66,
@@ -534,7 +598,8 @@
 "name": "Hand Floreo",
 "url": "www.youtube.com/watch?v=agONBGm7Luk&t=7m50s",
 "family": "Undulations",
-"category": "slow"
+"category": "slow",
+"start": "470"
 },
 {
 "index":67,
@@ -542,7 +607,8 @@
 "name": "Belly Roll",
 "url": "www.youtube.com/watch?v=eyNcSekIe-0&t=1m00s",
 "family": "Undulations",
-"category": "slow"
+"category": "slow",
+"start": "60"
 },
 {
 "index":68,
@@ -550,7 +616,8 @@
 "name": "Bodywave",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=6m02s",
 "family": "Undulations",
-"category": "slow"
+"category": "slow",
+"start": "362"
 },
 {
 "index":69,
@@ -558,7 +625,8 @@
 "name": "Deep Bodywave",
 "url": "www.youtube.com/watch?v=tgKAVdS-uH0&t=0m22s",
 "family": "Undulations",
-"category": "slow"
+"category": "slow",
+"start": "22"
 },
 {
 "index":70,
@@ -566,7 +634,8 @@
 "name": "Layback",
 "url": "www.youtube.com/watch?v=W7yHHfHdzrc&t=2m02s",
 "family": "Undulations",
-"category": "slow"
+"category": "slow",
+"start": "122"
 },
 {
 "index":71,
@@ -574,7 +643,8 @@
 "name": "Walking Bodywave",
 "url": "www.youtube.com/watch?v=MAx_gmVIfuU&t=0m44s",
 "family": "Undulations",
-"category": "slow"
+"category": "slow",
+"start": "44"
 },
 {
 "index":72,
@@ -582,7 +652,8 @@
 "name": "Circle Step",
 "url": "www.youtube.com/watch?v=BYF5iyI76KM&t=3m48s",
 "family": "Rotations",
-"category": "slow"
+"category": "slow",
+"start": "228"
 },
 {
 "index":73,
@@ -590,7 +661,8 @@
 "name": "Ribcage Rotation",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=6m21s",
 "family": "Rotations",
-"category": "slow"
+"category": "slow",
+"start": "381"
 },
 {
 "index":74,
@@ -598,7 +670,8 @@
 "name": "Torso Rotation",
 "url": "www.youtube.com/watch?v=fQ3YOPot7Yo&t=4m55s",
 "family": "Rotations",
-"category": "slow"
+"category": "slow",
+"start": "295"
 },
 {
 "index":75,
@@ -606,7 +679,8 @@
 "name": "Torso Twist",
 "url": "www.youtube.com/watch?v=lBg8VTcC8nY&t=4m17s",
 "family": "Rotations",
-"category": "slow"
+"category": "slow",
+"start": "257"
 },
 {
 "index":76,
@@ -614,7 +688,8 @@
 "name": "Taxeem",
 "url": "www.youtube.com/watch?v=bu98enjBqeU&t=0m02s",
 "family": "Figures Eights",
-"category": "slow"
+"category": "slow",
+"start": "2"
 },
 {
 "index":77,
@@ -622,7 +697,8 @@
 "name": "Reverse Taxeem (Maya)",
 "url": "www.youtube.com/watch?v=BYF5iyI76KM&t=0m16s",
 "family": "Figures Eights",
-"category": "slow"
+"category": "slow",
+"start": "16"
 },
 {
 "index":78,
@@ -630,7 +706,8 @@
 "name": "Walking Taxeem",
 "url": "www.youtube.com/watch?v=bu98enjBqeU&t=0m02s",
 "family": "Figures Eights",
-"category": "slow"
+"category": "slow",
+"start": "2"
 },
 {
 "index":79,
@@ -638,7 +715,8 @@
 "name": "Posture",
 "url": "www.youtube.com/watch?v=rJa6IFkRDW0&t=1m35s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "95"
 },
 {
 "index":80,
@@ -646,7 +724,8 @@
 "name": "Puja",
 "url": "www.youtube.com/watch?v=rJa6IFkRDW0&t=1m35s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "95"
 },
 {
 "index":81,
@@ -654,7 +733,8 @@
 "name": "Camelwalk",
 "url": "www.youtube.com/watch?v=eHa57t9yZAw&t=0m23s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "23"
 },
 {
 "index":82,
@@ -662,7 +742,8 @@
 "name": "Loco Camel",
 "url": "www.youtube.com/watch?v=jrnG6nJhKCc&NR=1&t=0m36s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "36"
 },
 {
 "index":83,
@@ -670,7 +751,8 @@
 "name": "Flutter",
 "url": "www.youtube.com/watch?v=4zfB-8qHEX4&t=6m47s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "407"
 },
 {
 "index":84,
@@ -678,7 +760,8 @@
 "name": "Levels",
 "url": "www.youtube.com/watch?v=eyNcSekIe-0&t=1m25s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "85"
 },
 {
 "index":85,
@@ -686,7 +769,8 @@
 "name": "Levels Fast",
 "url": "www.youtube.com/watch?v=eHa57t9yZAw&t=3m25s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "205"
 },
 {
 "index":86,
@@ -694,7 +778,8 @@
 "name": "Levels Slow",
 "url": "www.youtube.com/watch?v=aEzgJMKH2hc&t=6m07s ",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "367"
 },
 {
 "index":87,
@@ -702,7 +787,8 @@
 "name": "Level Drop",
 "url": "www.youtube.com/watch?v=tgKAVdS-uH0&t=4m32s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "272"
 },
 {
 "index":88,
@@ -710,7 +796,8 @@
 "name": "Head Slides",
 "url": "www.youtube.com/watch?v=eyNcSekIe-0&t=0m12s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "12"
 },
 {
 "index":89,
@@ -718,7 +805,8 @@
 "name": "Rainbow",
 "url": "www.youtube.com/watch?v=4yw5R10x_-Q&t=3m15s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "195"
 },
 {
 "index":90,
@@ -726,7 +814,8 @@
 "name": "Medusa Combo (ATS® style)",
 "url": "www.youtube.com/watch?v=jrnG6nJhKCc&NR=1&t=0m22s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "22"
 },
 {
 "index":91,
@@ -734,7 +823,8 @@
 "name": "Medusa Combo (Indian style)",
 "url": "www.youtube.com/watch?v=W8_dSdQv7K4&t=2m00s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "120"
 },
 {
 "index":91,
@@ -742,7 +832,8 @@
 "name": "Strong Arm 1",
 "url": "www.youtube.com/watch?v=n9Dnso3QB9I&t=2m23s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "143"
 },
 {
 "index":92,
@@ -750,7 +841,8 @@
 "name": "Strong Arm 2",
 "url": "www.youtube.com/watch?v=UtrP3fmJjvQ&t=7m04s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "424"
 },
 {
 "index":93,
@@ -758,7 +850,8 @@
 "name": "Strong Arm 3",
 "url": "www.youtube.com/watch?v=UtrP3fmJjvQ&t=1m35s",
 "family": "Others",
-"category": "slow"
+"category": "slow",
+"start": "95"
 },
 {
 "index":94,
@@ -766,7 +859,8 @@
 "name": "Simple Drop to the knees",
 "url": "www.youtube.com/watch?v=bu98enjBqeU&t=0m39s",
 "family": "Floor",
-"category": "slow"
+"category": "slow",
+"start": "39"
 },
 {
 "index":95,
@@ -774,7 +868,8 @@
 "name": "Berber Walk",
 "url": "www.youtube.com/watch?v=vG8EqEH3tYg&t=1m53s",
 "family": "Floor",
-"category": "slow"
+"category": "slow",
+"start": "193"
 },
 {
 "index":96,
@@ -782,7 +877,8 @@
 "name": "Mermaid Turn",
 "url": "www.youtube.com/watch?v=vG8EqEH3tYg&t=1m58s",
 "family": "Floor",
-"category": "slow"
+"category": "slow",
+"start": "198"
 },
 {
 "index":97,
@@ -790,7 +886,8 @@
 "name": "Zipper",
 "url": "www.youtube.com/watch?v=bu98enjBqeU&t=0m58s",
 "family": "Floor",
-"category": "slow"
+"category": "slow",
+"start": "58"
 },
 {
 "index":98,
@@ -798,7 +895,8 @@
 "name": "Zipper Petal",
 "url": "www.youtube.com/watch?v=bu98enjBqeU&t=1m07s",
 "family": "Floor",
-"category": "slow"
+"category": "slow",
+"start": "67"
 },
 {
 "index":99,
@@ -806,6 +904,7 @@
 "name": "Standing Drop",
 "url": "www.youtube.com/watch?v=ljrgiwAJcLk&t=2m53s",
 "family": "Floor",
-"category": "slow"
+"category": "slow",
+"start": "173"
 }
 ]

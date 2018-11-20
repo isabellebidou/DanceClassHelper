@@ -19,10 +19,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
-    host: ‘********.com',
-    user: ‘******',
-    password: ‘******',
-    database: ‘******',
+    host: 'isabellebidou.com',
+    user: '*****',
+    password: '*****',
+    database: 'isabelle_db',
     port: 3306
 });
 db.connect((err) => {
@@ -46,9 +46,9 @@ var LocalStrategy   = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: '******',
+    user: '*****',
     password: '*****',
-    database: '*****',
+    database: 'isabelle_db',
     port: 3306
 };
 var sessionStore = new MySQLStore(options);
@@ -135,7 +135,7 @@ app.get('/profile',authenticationMiddleware (),
   });
 
 //classes page
-app.get('/classes', authenticationMiddleware (),function(req, res) {
+app.get('/classes',function(req, res) {
     
 
     let sql = 'SELECT * FROM classes'
