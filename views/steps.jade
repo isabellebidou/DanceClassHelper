@@ -5,10 +5,20 @@ block content
           h2 Here are the steps we need to know
            .grid-container
             each step in steps
-             .item
-              h1.itemtitle #{step.name}
-              p.itemp #{step.family}
-              p.itemp #{step.category}
-              a.button(href='/step/#{step.index}') View
-              a.button(href='/editstep/#{step.index}') Edit
-              a.button(href='/deletestep/#{step.index}') Delete
+             if isAuthenticated
+              if user.userRole == "teacher"
+               .item
+                img.thumbnail(src = 'https://img.youtube.com/vi/'+ step.id +'/default.jpg', alt="thumbnail")
+                h1.itemtitle #{step.name}
+                p.itemp #{step.family}
+                p.itemp #{step.category}
+                a.button(href='/step/#{step.index}') View
+                a.button(href='/editstep/#{step.index}') Edit
+                a.button(href='/deletestep/#{step.index}') Delete
+              else
+               .item    
+                img.thumbnail(src = 'https://img.youtube.com/vi/'+ step.id +'/default.jpg', alt="thumbnail")
+                h1.itemtitle #{step.name}
+                p.itemp #{step.family}
+                p.itemp #{step.category}
+                a.button(href='/step/#{step.index}') View

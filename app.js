@@ -20,8 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: '*****',
-    password: '*****',
+    user: '******',
+    password: '******',
     database: 'isabelle_db',
     port: 3306
 });
@@ -46,8 +46,8 @@ var LocalStrategy   = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: '*****',
-    password: '*****',
+    user: '******',
+    password: '******',
     database: 'isabelle_db',
     port: 3306
 };
@@ -141,14 +141,14 @@ app.get('/classes',function(req, res) {
     let sql = 'SELECT * FROM classes'
     let query = db.query(sql, (err, res1) => {
         if (err) throw err;
-        //console.log(res1);
- console.log("classes req.session.email: "+req.session.email);
+
+
         res.render('classes', { root: VIEWS, res1 });
     });
     console.log('now you are on classes');
 });
 //students page
-app.get('/students', authenticationMiddleware (),function(req, res) {
+app.get('/students', function(req, res) {
 
     let sql = 'select * FROM danceclassusers ; '
     let query = db.query(sql, (err, res1) => {

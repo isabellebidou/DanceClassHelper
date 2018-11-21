@@ -10,13 +10,25 @@ block content
           
             .grid-container
               each row in res1
-                .item
-                  label Class name: 
-                  h2.itemtitle #{row.className}
-                  label Class date: 
-                  h2.itemtitle #{row.classDate}
+                if isAuthenticated
+                  if user.userRole == "teacher"
+                    .item
+                      label Class name: 
+                      h2.itemtitle #{row.className}
+                      label Class date: 
+                      h2.itemtitle #{row.classDate}
+                      a.button(href="/cart/#{row.classId}") Add to cart
+                      a.button(href="/class/#{row.classId}") Show
+                      a.button(href='/editclass/#{row.classId}') Edit
+                      a.button(href='/deleteclass/#{row.classId}') Delete
+                  else
+                    .item
+                      label Class name: 
+                      h2.itemtitle #{row.className}
+                      label Class date: 
+                      h2.itemtitle #{row.classDate}
+                      a.button(href="/cart/#{row.classId}") Add to cart
+                      a.button(href="/class/#{row.classId}") Show
 
-                  a.button(href="/class/#{row.classId}") Show
-                  a.button(href='/editclass/#{row.classId}') Edit
-                  a.button(href='/deleteclass/#{row.classId}') Delete
+                    
                   

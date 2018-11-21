@@ -2,25 +2,23 @@ extends layout
 block content
       .maincontent
         .intro
-          p
-            
-            
-
             p Welcome to my Dance Class Helper app
             | This is where you will find all the notes about the past classes you have attended.
             | Just login and browse to the classes
         .row
-          .left
-            h2 Up comming classes and workshops
-            p
-              iframe#calendar(src='https://calendar.google.com/calendar/embed?mode=AGENDA&src=b80ku3ri25rfjqgaidapjl8sm4%40group.calendar.google.com&ctz=Europe%2FDublin', style='border: 0', width='100%', height='100%', frameborder='0', scrolling='no')
+          iframe.left(src='https://calendar.google.com/calendar/embed?src=oo8s93t0st7kvb423kncv4di7g%40group.calendar.google.com&ctz=Europe%2FDublin', style='border: 0', width='100%', height='200%', frameborder='0', scrolling='no')
           .right
             if req
               if req.user.userRole == "teacher" 
                 p blabla teacher
               else
-                p bla bla student
-              
+                p 
+                  | new beginners and improvers classes starting in January!! 
+                  | and don't miss our saturday practice workshops!!
+            if req
+              p
+                | single class 12 euros  
+                | 6 classes 60 euros  
               
             else
               h2 Register/Login
@@ -30,8 +28,5 @@ block content
           h2 ATS bellydances classes in Cork and Online
           p
             | Group classes in the studio | one to one classes | online classes
-            if req
-              p
-                | single class 12 euros
-                | 6 classes 60 euros
+            
               
