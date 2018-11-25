@@ -8,6 +8,7 @@
 				
 // load all the things we need
 var passport = require('passport');
+var utils = require('../utils.js');
 var LocalStrategy   = require('passport-local').Strategy;
 // //passport    http://www.passportjs.org/docs/username-password/
 
@@ -22,8 +23,8 @@ var mysql = require('mysql');
 
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: 'isabelle_18',
-    password: '123456!!!',
+    user: '******',
+    password: '******',
     database: 'isabelle_db',
     port: 3306
 });
@@ -106,12 +107,10 @@ passport.use('local-register', new LocalStrategy({
                 //var datejoined = new Date();
                 var d = new Date();
                 var datejoined = "";
-
-                    var y = addZero(d.getFullYear(), 4);
-                    var mo = addZero(d.getMonth() + 1, 2);// javascript getMonth() starts at 0
-                    var da = addZero(d.getDate(), 2);
-                    
-                    datejoined  = y + "-" + mo + "-" + da;
+                var y = utils.addZero(d.getFullYear(), 4);
+                var mo = utils.addZero(d.getMonth() + 1, 2);// javascript getMonth() starts at 0
+                var da = utils.addZero(d.getDate(), 2);
+                datejoined  = y + "-" + mo + "-" + da;
                 var active = "inactive";
                 var role= "student"
                  var newUserMysql = new Object();
@@ -196,16 +195,12 @@ passport.use('local-signup', new LocalStrategy({
                 console.log("else");
 				// if there is no user with that email
                 // create the user
-                //var newUserMysql = new Object();
-                //console.log("new object");
-                //console.log("email :"+ email);
-				//newUserMysql.email    = email;
-                //newUserMysql.password = password; // use the generateHash function in our user model
+
                  let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + email + '","' + password + '","' + req.body.role +  '","' + req.body.active + '");'
 				//var insertQuery = "INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
 					console.log(sql);
 				let query = db.query(sql,function(err,results,fields){
-				//newUserMysql.id = rows.insertId;
+
 				
 				
 				if (err){throw err};
@@ -252,7 +247,7 @@ passport.use('local-updateuser', new LocalStrategy({
 				//var insertQuery = "INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
 					console.log(sql);
 				let query = db.query(sql,function(err,rows){
-				//newUserMysql.id = rows.insertId;
+
 
 				return done(null);
 				});
@@ -321,9 +316,3 @@ console.log(user);
 
 };
 
-function addZero(x, n) {
-                    if (x.toString().length < n) {
-                           x = "0" + x;
-                    }
-                    return x;
-}

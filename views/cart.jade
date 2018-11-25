@@ -1,4 +1,25 @@
 extends layout
 block content
       .maincontent
-        
+        table.cart
+            
+            tr
+             
+                th name
+                th order
+                th quantity
+                th total
+            each row in res1
+                tr
+                    
+                    td #{row.className}
+                    td #{row.orderId}
+                    td #{row.quantity}
+                    td €#{row.lineTotal}
+                    
+                    
+            
+            tr
+                td(colspan='3') Final total:€ #{total}
+                td buy now 
+                    

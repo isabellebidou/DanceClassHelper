@@ -1,11 +1,12 @@
 var express = require("express"); // call expresss to be used by application
 var app = express();
 var passport = require("passport")
-var mysql = require('mysql');// allow access to sql
+var mysql = require('mysql'); // allow access to sql
 //var flash = require("flash");
 var bodyParser = require('body-parser');
 var fs = require("fs");
 var behaviour = require('./behaviour.js');
+var utils = require('./utils.js');
 const path = require('path');
 const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
@@ -15,13 +16,15 @@ var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 //app.use(session);
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
     user: '******',
-    password: '******',
+    password: '*****',
     database: 'isabelle_db',
     port: 3306
 });
@@ -29,8 +32,7 @@ db.connect((err) => {
     if (err) {
 
         throw (err)
-    }
-    else {
+    } else {
         console.log("db connected!");
 
     }
@@ -41,7 +43,7 @@ require('./config/passport')(passport);
 //passport    http://www.passportjs.org/docs/username-password/
 
 
-var LocalStrategy   = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 //app.use(session({ secret: "topsecret" }));
 
 var options = {
@@ -54,98 +56,239 @@ var options = {
 var sessionStore = new MySQLStore(options);
 app.set('trust proxy', 1);
 app.use(session({
-  secret: 'qwertys',
-  store: sessionStore,
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: true }
+    secret: 'qwertys',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: true
+    }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(function(req,res,next){
-    res.locals.isAuthenticated= req.isAuthenticated();
+app.use(function(req, res, next) {
+    res.locals.isAuthenticated = req.isAuthenticated();
     next();
 });
-app.use(function(req,res,next){
+app.use(function(req, res, next) {
     res.locals.user = req.user;
     next();
 });
 
 //home page
 app.get('/', function(req, res) {
-        console.log("index ");
-    console.log("req.user "+req.user);
+    console.log("index ");
+    console.log("req.user " + JSON.stringify(req.user));
 
-    console.log("req.isAuthenticated() "+req.isAuthenticated());
-    console.log("req.session "+req.session);
-    if (req.isAuthenticated()){
+    console.log("req.isAuthenticated() " + req.isAuthenticated());
+    console.log("req.session " + JSON.stringify(req.session));
+    if (req.isAuthenticated()) {
         console.log(req.user.userRole);
-        res.render('index', { root: VIEWS, req });
-    }else{
-        res.render('index', { root: VIEWS });
+        res.render('index', {
+            root: VIEWS,
+            req
+        });
+    } else {
+        res.render('index', {
+            root: VIEWS
+        });
     }
-    
+
     console.log('now you are home');
-    
+
 });
 
 
 
-app.get('/logout', function(req, res){
-req.logout();
-req.session.destroy();
+app.get('/logout', function(req, res) {
+    req.logout();
+    req.session.destroy();
     console.log("logout ");
-    console.log("req.user "+req.user);
-    
-    console.log("req.isAuthenticated() "+req.isAuthenticated());
-    console.log("req.session "+req.session);
-res.redirect('/');
+    console.log("req.user " + req.user);
+
+    console.log("req.isAuthenticated() " + req.isAuthenticated());
+    console.log("req.session " + req.session);
+    res.redirect('/');
 });
 
 //passport routes
 app.get('/login',
-  function(req, res){
-    res.render('login', { root: VIEWS });
-    console.log('now you are on the login page');
-  });
-  
-app.post('/login', 
-  passport.authenticate('local-login', { failureRedirect: '/login' , successRedirect: '/classes'}),
-  function(req, res) {
-    //req.session.email = req.user.userRole;
-      //console.log(req.user.userRole);
-      //console.log("req.session.email: "+req.session.email);
-    //res.redirect('/');
-    console.log("login ");
-    console.log("req.user "+req.user);
-    console.log("req.user.userRole "+req.user.userRole);
-    console.log("req.isAuthenticated() "+req.isAuthenticated());
-    console.log("req.session "+req.session);
-    //res.render('index', { root: VIEWS, req });
-  });
-  
+    function(req, res) {
+        res.render('login', {
+            root: VIEWS
+        });
+        console.log('now you are on the login page');
+    });
+
+app.post('/login',
+    passport.authenticate('local-login', {
+        failureRedirect: '/login',
+        successRedirect: '/classes'
+    }),
+    function(req, res) {
+        //req.session.email = req.user.userRole;
+        //console.log(req.user.userRole);
+        //console.log("req.session.email: "+req.session.email);
+        //res.redirect('/');
+        console.log("login ");
+        console.log("req.user " + req.user);
+        console.log("req.user.userRole " + req.user.userRole);
+        console.log("req.isAuthenticated() " + req.isAuthenticated());
+        console.log("req.session " + req.session);
+        //res.render('index', { root: VIEWS, req });
+    });
+
+
+// cart page
+
+app.get('/cart', function(req, res) {
+    console.log("cart");
+    console.log("req.user " + JSON.stringify(req.user));
+    console.log("req.user.userId " + req.user.userId);
+    console.log("req.isAuthenticated() " + req.isAuthenticated());
+    console.log("req.session " + JSON.stringify(req.session));
+    console.log("req.session.id " + req.session.id);
+    //   console.log("req.session.cart " + req.session.cart.id);
+
+
+let sql = 'SELECT id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
+    let query3 = db.query(sql, (err, res1) => {
+        if (err) throw err;
+        var total = 0;
+        for (var i = 0; i<res1.length; i++){
+            total += res1[i].lineTotal;
+        }
+
+        res.render('cart', {
+            root: VIEWS,
+            res1, total
+        });
+    });
+
+    console.log('now you are on the cart view');
+
+});
+
+app.get('/cart/:id', function(req, res) {
+    console.log("cart");
+    console.log("req.user " + JSON.stringify(req.user));
+    console.log("req.user.userId " + req.user.userId);
+    console.log("req.isAuthenticated() " + req.isAuthenticated());
+    console.log("req.session " + JSON.stringify(req.session));
+    console.log("req.session.id " + req.session.id);
+    //   console.log("req.session.cart " + req.session.cart.id);
 
 
 
-app.get('/profile',authenticationMiddleware (),
-  
-  function(req, res){
-    res.render('profile', { user: req.user });
-  });
+    if (req.session.cart == "active") {
+
+        // find order id
+        var orderId = null;
+
+        let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId ASC LIMIT 1;';
+        console.log("sql3: " + sql3);
+        let query3 = db.query(sql3, (err, res2) => {
+            if (err) throw err;
+            console.log("res2:" + res2)
+            orderId = res2[0].orderId;
+            let sql2 = 'INSERT INTO orderitems (itemId,orderId,itemQuantity)VALUES("' + parseInt(req.params.id) + '","' + orderId + '","' + 1 + '");'
+            console.log("sql2: " + sql2);
+
+            let query2 = db.query(sql2, (err, res3) => {
+                if (err) throw err;
+
+            });
+
+        });
+
+
+
+    } else {
+        //make session
+        req.session.cart = "active";
+        console.log("req.session.cart " + req.session.cart);
+        //create order
+        var d = new Date();
+        var date = "";
+
+        var y = utils.addZero(d.getFullYear(), 4);
+        var mo = utils.addZero(d.getMonth() + 1, 2); // javascript getMonth() starts at 0
+        var da = utils.addZero(d.getDate(), 2);
+        date = y + "-" + mo + "-" + da;
+        let sql1 = 'INSERT INTO orders (orderReference,orderDate,orderStatus,orderUserId) VALUES("' + req.session.id + '","' + date + '"," pending ","' + req.user.userId + '");'
+        let query = db.query(sql1, (err, res2) => {
+            if (err) throw err;
+
+        });
+
+        // find order id
+        var orderId = null;
+        //SELECT orderId FROM orders WHERE orderUserId = "1" ORDER BY orderId ASC LIMIT 1
+        let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId ASC LIMIT 1;';
+        let query3 = db.query(sql3, (err, res2) => {
+            if (err) throw err;
+            orderId = res2[0].orderId;
+            console.log("res2:" + JSON.stringify(res2))
+            console.log("sql3: " + sql3);
+            console.log("orderId: " + orderId);
+            //create orderItemLine
+
+            let sql2 = 'INSERT INTO orderitems (orderitems.itemId,orderitems.orderId,orderitems.itemQuantity)VALUES("' + parseInt(req.params.id) + '","' + orderId + '","' + 1 + '");'
+            console.log("sql2: " + sql2);
+            let query2 = db.query(sql2, (err, res3) => {
+                if (err) throw err;
+
+            });
+
+        });
+
+    }
+    let sql = 'SELECT id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
+    let query3 = db.query(sql, (err, res1) => {
+        if (err) throw err;
+
+
+
+        res.render('cart', {
+            root: VIEWS,
+            res1
+        });
+    });
+
+    console.log('now you are on the cart view');
+
+});
+
+// app.get('/carts',
+
+//   function(req, res){
+//     res.render('profile', { user: req.user });
+//   });
+
+app.get('/profile',
+
+    function(req, res) {
+        res.render('profile', {
+            user: req.user
+        });
+    });
 
 //classes page
-app.get('/classes',function(req, res) {
-    
+app.get('/classes', function(req, res) {
+
 
     let sql = 'SELECT * FROM classes'
     let query = db.query(sql, (err, res1) => {
         if (err) throw err;
 
 
-        res.render('classes', { root: VIEWS, res1 });
+        res.render('classes', {
+            root: VIEWS,
+            res1
+        });
     });
-    console.log('now you are on classes');
+    console.log('now you are on classes: ');
 });
 //students page
 app.get('/students', function(req, res) {
@@ -155,64 +298,102 @@ app.get('/students', function(req, res) {
         if (err) throw err;
         console.log(res1);
 
-        res.render('students', { root: VIEWS, res1 });
+        res.render('students', {
+            root: VIEWS,
+            res1
+        });
     });
     console.log('now you are on students');
 });
 
-app.get('/class/:id', function(req, res) { 
+app.get('/class/:id', function(req, res) {
 
     let sql = 'SELECT * FROM classes WHERE classId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('class', { root: VIEWS, res1 });
+        res.render('class', {
+            root: VIEWS,
+            res1
+        });
 
     });
-   
+
     console.log("Now you are on the class page!");
 });
 
-app.get('/student/:id', function(req, res) { 
+app.get('/student/:id', function(req, res) {
 
     let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('student', { root: VIEWS, res1 });
+        res.render('student', {
+            root: VIEWS,
+            res1
+        });
 
     });
-   
+
     console.log("Now you are on the student page!");
 });
 
 
 //register page
 app.get('/register', function(req, res) {
-    
-        // res.sendFile('index.html', {root: VIEWS},behaviour);
-        res.render('register', { root: VIEWS });
-        console.log('now you ready to register');
+
+    // res.sendFile('index.html', {root: VIEWS},behaviour);
+    res.render('register', {
+        root: VIEWS
+    });
+    console.log('now you ready to register');
 
 });
 
-app.post('/register', 
-  passport.authenticate('local-register', { failureRedirect: '/register' }),
-   
-  function(req, res) {
-      console.log("register -local-register");
-      console.log(req.user);
-      console.log(req.isAuthenticated());
-    res.redirect('/');
-  });
+app.post('/register',
+    passport.authenticate('local-register', {
+        failureRedirect: '/register'
+    }),
+
+    function(req, res) {
+        console.log("register -local-register");
+        console.log(req.user);
+        console.log(req.isAuthenticated());
+        res.redirect('/');
+    });
 
 //step page
 app.get('/step', function(req, res) {
-    
-        
-        res.render('step', { root: VIEWS });
-        console.log('checking a step');
+
+
+    res.render('step', {
+        root: VIEWS
+    });
+    console.log('checking a step');
 
 });
 //--------------------- CREATE TABLES
+app.get('/createorderstable', function(req, res) {
+    let sql = 'CREATE TABLE orders (orderId int NOT NULL AUTO_INCREMENT PRIMARY KEY, orderReference int(255),orderDate date, orderStatus varchar(255),orderTotal int(255), orderUserId int (255),FOREIGN KEY (orderUserId) REFERENCES danceclassusers(userId));'
+    let query = db.query(sql, (err, res) => {
+        if (err) throw err;
+    });
+});
+
+
+app.get('/createordersitemstable', function(req, res) {
+    let sql = 'CREATE TABLE orderitems (orderitemsId int NOT NULL AUTO_INCREMENT PRIMARY KEY, itemId int (255) ,orderId int (255), itemQuantity int(255), FOREIGN KEY (orderId) REFERENCES orders(orderId),FOREIGN KEY (itemId) REFERENCES classes(classId));'
+    let query = db.query(sql, (err, res) => {
+        if (err) throw err;
+    });
+});
+
+app.get('/createordersitemview', function(req, res) {
+    let sql = 'CREATE VIEW orderitemsview AS SELECT orderitems.itemId AS id, classes.className AS className, orderitems.orderId AS orderId,classes.classPrice AS price,orderitems.itemQuantity AS quantity, classes.classPrice * orderitems.itemQuantity AS lineTotal FROM orderitems INNER JOIN classes ON orderitems.itemId = classes.classId;'
+    let query = db.query(sql, (err, res) => {
+        if (err) throw err;
+    });
+});
+
+
 // app.get('/createuserrolestable', function(req, res) {
 //     let sql = 'CREATE TABLE userRoles (userRolesId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userRolesName varchar(255));'
 //     let query = db.query(sql, (err, res) => {
@@ -322,17 +503,19 @@ app.get('/createtable', function(req, res) {
 
 //createclass page
 app.get('/createclass', function(req, res) {
-    
-        // res.sendFile('index.html', {root: VIEWS},behaviour);
-        res.render('createclass', { root: VIEWS });
-        console.log('now you ready to create a class');
+
+    // res.sendFile('index.html', {root: VIEWS},behaviour);
+    res.render('createclass', {
+        root: VIEWS
+    });
+    console.log('now you ready to create a class');
 
 });
 
 //add entry to class table on post on button press
 app.post('/createclass', function(req, res) {
     let sql = 'INSERT INTO classes (className,classDate,classVenue,classTime,classPrice,classComments,Link) VALUES ("' + req.body.name + '","' + req.body.date + '","' + req.body.venue + '","' + req.body.time + '","' + req.body.price + '","' + req.body.comments + '","' + req.body.link + '");'
-    
+
     let query = db.query(sql, (err, res) => {
 
         if (err) throw err;
@@ -342,50 +525,58 @@ app.post('/createclass', function(req, res) {
 
 });
 
-app.get('/editclass/:id', authenticationMiddleware (),function(req, res) {
+app.get('/editclass/:id', authenticationMiddleware(), function(req, res) {
     let sql = 'SELECT * FROM classes WHERE classId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('editclass', { root: VIEWS, res1 });
+        res.render('editclass', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/editclass/:id', function(req, res) {
 
-        let sql = 'UPDATE classes SET className= "' + req.body.newname + '" , classDate = "' + req.body.newdate + '", classVenue = "' + req.body.newvenue + '", classTime = "' + req.body.newtime + '",classPrice = "' + req.body.newprice + '", classComments = "' + req.body.newcomments + '", Link = "' + req.body.newlink + '" WHERE Id = "' + req.params.id + '" ;'
+    let sql = 'UPDATE classes SET className= "' + req.body.newname + '" , classDate = "' + req.body.newdate + '", classVenue = "' + req.body.newvenue + '", classTime = "' + req.body.newtime + '",classPrice = "' + req.body.newprice + '", classComments = "' + req.body.newcomments + '", Link = "' + req.body.newlink + '" WHERE Id = "' + req.params.id + '" ;'
 
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/class/ + req.params.id);
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/class/ + req.params.id);
 
 });
 
 
-app.get('/deleteclass/:id', authenticationMiddleware (), function(req, res) {
-    
-        let sql = 'DELETE FROM classes WHERE Id = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/classes');
-        });
+app.get('/deleteclass/:id', function(req, res) {
+
+    let sql = 'DELETE FROM classes WHERE Id = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/classes');
+    });
 
 });
 
 //--------------------------USER
 
 //createuser page createuser
-app.get('/createuser', authenticationMiddleware (),function(req, res) {
+app.get('/createuser', function(req, res) {
 
-        res.render('createuser', { root: VIEWS });
-        console.log('now you ready to create a user');
+    res.render('createuser', {
+        root: VIEWS
+    });
+    console.log('now you ready to create a user');
 
 });
 
+
+
+
 //add entry to users table on post on button press ** old **
 // app.post('/createstudent', function(req, res1) {
-    
+
 
 //     let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
 //     let query = db.query(sql, (err, res) => {
@@ -394,57 +585,61 @@ app.get('/createuser', authenticationMiddleware (),function(req, res) {
 //     });
 //     //res1.render('students', { root: VIEWS });
 //     res1.redirect('/students');
-   
+
 
 // });
 
 //add entry to users table on post on button press ** new **
-app.post('/createuser', 
-  passport.authenticate('local-signup', { failureRedirect: '/createuser' }),
-   
-  function(req, res) {
-      console.log("createuser -local-signup");
-    res.redirect('/');
-  });
+app.post('/createuser',
+    passport.authenticate('local-signup', {
+        failureRedirect: '/createuser'
+    }),
+
+    function(req, res) {
+        console.log("createuser -local-signup");
+        res.redirect('/');
+    });
 
 //edit data of  muscle table entry on post on button press
-app.get('/editstudent/:id', authenticationMiddleware (), function(req, res) {
+app.get('/editstudent/:id', authenticationMiddleware(), function(req, res) {
     let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('editstudent', { root: VIEWS, res1 });
+        res.render('editstudent', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/editstudent/:id', function(req, res) {
 
-        let sql = 'UPDATE danceclassusers SET userFirstName= "' + req.body.newfirstname + '" , userLastName = "' + req.body.newlastname + '", userDateJoined = "' + req.body.newdatejoined + '", userComments = "' + req.body.newcomments + '", userEmail = "' + req.body.newemail + '", userPassword = "' + req.body.newpassword + '", userRole = "' + req.body.newrole + '", userActive = "'+ req.body.newactive +'" WHERE userId = "' + req.params.id + '" ;'
+    let sql = 'UPDATE danceclassusers SET userFirstName= "' + req.body.newfirstname + '" , userLastName = "' + req.body.newlastname + '", userDateJoined = "' + req.body.newdatejoined + '", userComments = "' + req.body.newcomments + '", userEmail = "' + req.body.newemail + '", userPassword = "' + req.body.newpassword + '", userRole = "' + req.body.newrole + '", userActive = "' + req.body.newactive + '" WHERE userId = "' + req.params.id + '" ;'
 
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/student/ + req.params.id);
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/student/ + req.params.id);
 
 });
 
 // app.post('/editstudent/:id',  passport.authenticate('local-updateuser', { failureRedirect: '/' }),
-   
+
 //   function(req, res) {
 //       console.log("editstudent -local-updateuser");
 //     res.redirect('/students');
 //   });
-  
-app.get('/deletestudent/:id', authenticationMiddleware (),function(req, res) {
-    
-        let sql = 'DELETE FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/students');
-        });
+
+app.get('/deletestudent/:id', authenticationMiddleware(), function(req, res) {
+
+    let sql = 'DELETE FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/students');
+    });
 
 });
-
 
 
 
@@ -457,7 +652,9 @@ app.post('/createuserrole', function(req, res) {
         if (err) throw err;
 
     });
-    res.render('index', { root: VIEWS });
+    res.render('index', {
+        root: VIEWS
+    });
 
 });
 
@@ -466,74 +663,82 @@ app.get('/edituserroles/:id', function(req, res) {
     let sql = 'SELECT * FROM userRoles WHERE userId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('edituser', { root: VIEWS, res1 });
+        res.render('edituser', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/edituserroles/:id', function(req, res) {
 
-        let sql = 'UPDATE userRoles SET userRolesId = "' + req.body.newuserroleid + '" , userRolesName = "' + req.body.newuserrolename + '" ;'
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/userroles/ + req.params.id);
+    let sql = 'UPDATE userRoles SET userRolesId = "' + req.body.newuserroleid + '" , userRolesName = "' + req.body.newuserrolename + '" ;'
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/userroles/ + req.params.id);
 
 });
 
 
 app.get('/deleteuserroles/:id', function(req, res) {
-    
-        let sql = 'DELETE FROM userRoles WHERE Id = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/userroles');
-        });
+
+    let sql = 'DELETE FROM userRoles WHERE Id = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/userroles');
+    });
 
 });
 
 
 //add entry to userroles table on post on button press
-app.post('/creatcart', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
+app.post('/creatcart', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
 
-    let sql = 'INSERT INTO cart (cartDate,cartStatus,cartTotal,cartUserId) VALUES ("' + req.body.cartdate + '","' + req.body.cartstatus + req.body.carttotal + '","' + req.body.cartuserid +'");'
+    let sql = 'INSERT INTO cart (cartDate,cartStatus,cartTotal,cartUserId) VALUES ("' + req.body.cartdate + '","' + req.body.cartstatus + req.body.carttotal + '","' + req.body.cartuserid + '");'
 
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
     });
 
-    res.render('index', { root: VIEWS });
+    res.render('index', {
+        root: VIEWS
+    });
 });
 
 //edit data of  muscle table entry on post on button press
-app.get('/editcart/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
+app.get('/editcart/:id', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
     let sql = 'SELECT * FROM cart WHERE cartId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('editcart', { root: VIEWS, res1 });
+        res.render('editcart', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/editcart/:id', function(req, res) {
 
-        let sql = 'UPDATE cart SET cartDate = "' + req.body.newcartdate + '" , cartStatus = "' + req.body.newcartstatus +'" , cartTotal = "' + req.body.newcarttotal + '" , cartUserId = "' + req.body.newcartuserid +'" ;'
+    let sql = 'UPDATE cart SET cartDate = "' + req.body.newcartdate + '" , cartStatus = "' + req.body.newcartstatus + '" , cartTotal = "' + req.body.newcarttotal + '" , cartUserId = "' + req.body.newcartuserid + '" ;'
 
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/userroles/ + req.params.id);
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/userroles/ + req.params.id);
 
 });
 
 
-app.get('/deletecart/:id', require('connect-ensure-login').ensureLoggedIn(),function(req, res) {
-    
-        let sql = 'DELETE FROM cart WHERE cartId = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/index');
-        });
+app.get('/deletecart/:id', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
+
+    let sql = 'DELETE FROM cart WHERE cartId = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/index');
+    });
 
 });
 
@@ -542,13 +747,15 @@ app.get('/deletecart/:id', require('connect-ensure-login').ensureLoggedIn(),func
 
 app.post('/createstepfamily', function(req, res) {
 
-    let sql = 'INSERT INTO stepFamily (stepFamilyId,stepFamilyName) VALUES ("' + req.body.stepfamilyid + '","' + req.body.stepfamilyname +'");'
+    let sql = 'INSERT INTO stepFamily (stepFamilyId,stepFamilyName) VALUES ("' + req.body.stepfamilyid + '","' + req.body.stepfamilyname + '");'
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
 
     });
 
-    res.render('index', { root: VIEWS });
+    res.render('index', {
+        root: VIEWS
+    });
 });
 
 
@@ -556,44 +763,49 @@ app.get('/editstepfamily/:id', function(req, res) {
     let sql = 'SELECT * FROM stepFamily WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('stepfamilies', { root: VIEWS, res1 });
+        res.render('stepfamilies', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/editstepfamily/:id', function(req, res) {
 
-        let sql = 'UPDATE stepFamily SET stepFamilyId = "' + req.body.newfamilyid + '" , stepFamilyName = "' + req.body.newstepfamilyname +'" ;'
+    let sql = 'UPDATE stepFamily SET stepFamilyId = "' + req.body.newfamilyid + '" , stepFamilyName = "' + req.body.newstepfamilyname + '" ;'
 
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/stepfamilies/ + req.params.id);
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/stepfamilies/ + req.params.id);
 
 });
 
 
 app.get('/deletestepfamily/:id', function(req, res) {
-    
-        let sql = 'DELETE FROM stepFamily WHERE Id = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/stepfamilies');
-        });
+
+    let sql = 'DELETE FROM stepFamily WHERE Id = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/stepfamilies');
+    });
 
 });
 
 
 app.post('/createstepcategory', function(req, res) {
 
-    let sql = 'INSERT INTO stepCategory (stepCategoryId,stepCategoryName) VALUES ("' + req.body.stepcategoryid + '","' + req.body.stepcategoryname +'");'
+    let sql = 'INSERT INTO stepCategory (stepCategoryId,stepCategoryName) VALUES ("' + req.body.stepcategoryid + '","' + req.body.stepcategoryname + '");'
 
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
 
     });
 
-    res.render('stepcategories', { root: VIEWS });
+    res.render('stepcategories', {
+        root: VIEWS
+    });
 
 });
 
@@ -602,30 +814,33 @@ app.get('/editstepcategory/:id', function(req, res) {
     let sql = 'SELECT * FROM stepCategory WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('stepcategories', { root: VIEWS, res1 });
+        res.render('stepcategories', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/editstepcategory/:id', function(req, res) {
 
-        let sql = 'UPDATE stepCategory SET stepCategoryId = "' + req.body.newcategoryid + '" , stepCategoryName = "' + req.body.newstepcategoryname +'" ;'
+    let sql = 'UPDATE stepCategory SET stepCategoryId = "' + req.body.newcategoryid + '" , stepCategoryName = "' + req.body.newstepcategoryname + '" ;'
 
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/stepcategories/ + req.params.id);
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/stepcategories/ + req.params.id);
 
 });
 
 
 app.get('/deletestepcategory/:id', function(req, res) {
-    
-        let sql = 'DELETE FROM stepCategory WHERE Id = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/stepcategories');
-        });
+
+    let sql = 'DELETE FROM stepCategory WHERE Id = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/stepcategories');
+    });
 
 });
 
@@ -633,14 +848,16 @@ app.get('/deletestepcategory/:id', function(req, res) {
 
 app.post('/createstepzillpattern', function(req, res) {
 
-    let sql = 'INSERT INTO stepZillPattern (stepZillPatterId,stepZillPatterName) VALUES ("' + req.body.stepzillpatternid + '","' + req.body.stepzillpatternname +'");'
+    let sql = 'INSERT INTO stepZillPattern (stepZillPatterId,stepZillPatterName) VALUES ("' + req.body.stepzillpatternid + '","' + req.body.stepzillpatternname + '");'
 
     let query = db.query(sql, (err, res) => {
         if (err) throw err;
 
     });
 
-    res.render('stepzillpatterns', { root: VIEWS });
+    res.render('stepzillpatterns', {
+        root: VIEWS
+    });
 });
 
 
@@ -648,30 +865,33 @@ app.get('/editstepzillpattern/:id', function(req, res) {
     let sql = 'SELECT * FROM stepZillPattern WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('stepzillpatterns', { root: VIEWS, res1 });
+        res.render('stepzillpatterns', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/editstepcategory/:id', function(req, res) {
 
-        let sql = 'UPDATE stepZillPattern SET stepZillPatternId = "' + req.body.newstepzillid + '" , stepZillPatternName = "' + req.body.newstepzillname +'" ;'
+    let sql = 'UPDATE stepZillPattern SET stepZillPatternId = "' + req.body.newstepzillid + '" , stepZillPatternName = "' + req.body.newstepzillname + '" ;'
 
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/stepzillpatterns/ + req.params.id);
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/stepzillpatterns/ + req.params.id);
 
 });
 
 
 app.get('/deletestepzillpattern/:id', function(req, res) {
-    
-        let sql = 'DELETE FROM stepZillPattern WHERE Id = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/stepzillpatterns');
-        });
+
+    let sql = 'DELETE FROM stepZillPattern WHERE Id = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/stepzillpatterns');
+    });
 
 });
 
@@ -684,7 +904,9 @@ app.post('/createstep', function(req, res) {
 
     });
 
-    res.render('steps', { root: VIEWS });
+    res.render('steps', {
+        root: VIEWS
+    });
 });
 
 
@@ -692,41 +914,44 @@ app.get('/editstep/:id', function(req, res) {
     let sql = 'SELECT * FROM steps WHERE Id = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
         if (err) throw (err);
-        res.render('edituser', { root: VIEWS, res1 });
+        res.render('edituser', {
+            root: VIEWS,
+            res1
+        });
     });
 });
 
 app.post('/editstep/:id', function(req, res) {
 
-        let sql = 'UPDATE step SET stepName= "' + req.body.newstepname + '" , stepFamilyId = "' + req.body.newfamilyid + '", stepCategoryId = "' + req.body.newcategoryid + '", stepZillPatternId = "' + req.body.newzillpatternid + '", stepComments = "' + req.body.newstepcomments + '", stepLink = "' + req.body.newsteplink + '" ;'
+    let sql = 'UPDATE step SET stepName= "' + req.body.newstepname + '" , stepFamilyId = "' + req.body.newfamilyid + '", stepCategoryId = "' + req.body.newcategoryid + '", stepZillPatternId = "' + req.body.newzillpatternid + '", stepComments = "' + req.body.newstepcomments + '", stepLink = "' + req.body.newsteplink + '" ;'
 
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            console.log(res1);
-        });
-        res.redirect(/steps/ + req.params.id);
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        console.log(res1);
+    });
+    res.redirect(/steps/ + req.params.id);
 
 });
 
 
 app.get('/deletestep/:id', function(req, res) {
-    
-        let sql = 'DELETE FROM step WHERE Id = "' + req.params.id + '"; '
-        let query = db.query(sql, (err, res1) => {
-            if (err) throw (err);
-            res.redirect('/steps');
-        });
+
+    let sql = 'DELETE FROM step WHERE Id = "' + req.params.id + '"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw (err);
+        res.redirect('/steps');
+    });
 
 });
 
 //-------------------------------END OF TODO
 
-app.get('/step/:id', function(req, res) { 
-    
+app.get('/step/:id', function(req, res) {
+
     var indOne = null;
 
-function choosestep(indOne) {
-    
+    function choosestep(indOne) {
+
         return indOne.index === parseInt(req.params.id);
     }
 
@@ -734,22 +959,24 @@ function choosestep(indOne) {
     indOne = steps.filter(choosestep);
     console.log(indOne);
 
-    
-  
-//    var embedUrl = behaviour.makeEmbedUrl(indOne[0].url, indOne[0].id);
-//    console.log("app.get: "+embedUrl);
 
-    res.render('step', { indOne:indOne});
+
+    //    var embedUrl = behaviour.makeEmbedUrl(indOne[0].url, indOne[0].id);
+    //    console.log("app.get: "+embedUrl);
+
+    res.render('step', {
+        indOne: indOne
+    });
 });
 
-app.get('/queryme', function(req,res){
+app.get('/queryme', function(req, res) {
     let sql = 'SELECT * FROM classes';
     let query = db.query(
-        sql,(err,res) =>{
-            if(err) throw err;
+        sql, (err, res) => {
+            if (err) throw err;
             console.log(res);
         });
-        res.send("message in the console");
+    res.send("message in the console");
 
 });
 
@@ -758,10 +985,12 @@ app.get('/queryme', function(req,res){
 //-------------------------------------json manipulation: STEPS
 app.get('/addstep', function(req, res) {
 
-   // if (req.session.email == "LoggedIn") {
-        // res.sendFile('index.html', {root: VIEWS},behaviour);
-        res.render('addstep', { root: VIEWS });
-        console.log('now you see th steps');
+    // if (req.session.email == "LoggedIn") {
+    // res.sendFile('index.html', {root: VIEWS},behaviour);
+    res.render('addstep', {
+        root: VIEWS
+    });
+    console.log('now you see th steps');
     // }
     // else {
     //     res.redirect('/login');
@@ -770,7 +999,9 @@ app.get('/addstep', function(req, res) {
 
 app.get("/steps", function(req, res) {
 
-    res.render("steps", { steps: steps });
+    res.render("steps", {
+        steps: steps
+    });
     console.log("steps");
 });
 
@@ -811,8 +1042,7 @@ app.post('/addstep', function(req, res) {
     fs.readFile('./models/steps.json', 'utf8', function readFileCallback(err, data) {
         if (err) {
             throw (err);
-        }
-        else {
+        } else {
             steps.push(step); // add the information from the above variable
             json = JSON.stringify(steps, null, 4); // converted back to JSON the 4 spaces the json file out so when we look at it it is easily read. So it indents it. 
             fs.writeFile('./models/steps.json', json, 'utf8'); // Write the file back
@@ -821,11 +1051,6 @@ app.post('/addstep', function(req, res) {
     });
     res.redirect("/steps")
 });;
-
-
-
-
-
 
 
 
@@ -842,7 +1067,9 @@ app.get('/editstep/:id', function(req, res) {
     console.log("editstep");
     var indOne = steps.filter(choosestep);
 
-    res.render('editstep', { indOne: indOne });
+    res.render('editstep', {
+        indOne: indOne
+    });
 });
 
 
@@ -853,7 +1080,11 @@ app.post('/editstep/:id', function(req, res) {
     var y = req.body.newanswer;
     var z = parseInt(req.params.id);
 
-    steps.splice(z - 1, 1, { step: x, answer: y, id: z });
+    steps.splice(z - 1, 1, {
+        step: x,
+        answer: y,
+        id: z
+    });
     var json = JSON.stringify(steps, null, 4);
 
     fs.writeFile('./models/steps.json', json, 'utf8');
@@ -870,8 +1101,7 @@ app.get("/deletestep/:id", function(req, res) {
         fs.writeFile('./models/steps.json', json, 'utf8');
 
         res.redirect("/steps");
-    }
-    else {
+    } else {
         res.redirect('/login');
     }
 
@@ -897,22 +1127,19 @@ function recalibrate() {
 //--------------------------------https://gist.github.com/christopher4lis/f7121a07740e5dbca860c9beb2910565
 
 
-function authenticationMiddleware () {  
-	return (req, res, next) => {
-		console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
+function authenticationMiddleware() {
+    return (req, res, next) => {
+        console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
 
-	    if (req.isAuthenticated()) return next();
-	    res.redirect('/login')
-	}
+        if (req.isAuthenticated()) return next();
+        res.redirect('/login')
+    }
 }
 
 
 
 
-
-
-
 //set up the environment for the app to run
-app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0" , function(){
+app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {
     console.log("app is running");
 });
