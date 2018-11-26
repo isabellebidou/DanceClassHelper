@@ -154,15 +154,21 @@ app.get('/cart', function(req, res) {
 
 let sql = 'SELECT id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
     let query3 = db.query(sql, (err, res1) => {
+        console.log(res1);
+        
         if (err) throw err;
         var total = 0;
+        var items = " ";
         for (var i = 0; i<res1.length; i++){
             total += res1[i].lineTotal;
+            items += " ";
+            items += res1[i].className;
+            console.log(res1[i].className);
         }
-
+        console.log(items);
         res.render('cart', {
             root: VIEWS,
-            res1, total
+            res1, total, items
         });
     });
 
@@ -197,6 +203,7 @@ app.get('/cart/:id', function(req, res) {
 
             let query2 = db.query(sql2, (err, res3) => {
                 if (err) throw err;
+                
 
             });
 
@@ -248,11 +255,17 @@ app.get('/cart/:id', function(req, res) {
     let query3 = db.query(sql, (err, res1) => {
         if (err) throw err;
 
-
+        var total = 0;
+        var items = " ";
+        for (var i = 0; i<res1.length; i++){
+            total += res1[i].lineTotal;
+            items += " ";
+            items += res1[i].className;
+        }
 
         res.render('cart', {
             root: VIEWS,
-            res1
+            res1, total, items
         });
     });
 
@@ -260,11 +273,31 @@ app.get('/cart/:id', function(req, res) {
 
 });
 
-// app.get('/carts',
+app.get('/thankyou',
 
-//   function(req, res){
-//     res.render('profile', { user: req.user });
-//   });
+  function(req, res){
+    res.render('thankyou', { user: req.user });
+  });
+  //empty cart , update order status with paid by PayPal
+app.get('/aboutsend',
+
+    function(req, res) {
+           let sql = 'UPDATE orders SET orderStatus ="paid by PayPal" WHERE orderReference = "' + req.session.id + '";'
+           req.session.regenerate();
+    console.log("regenerate ");
+    console.log("req.user " + req.user);
+
+    console.log("req.isAuthenticated() " + req.isAuthenticated());
+    console.log("req.session " + req.session);
+    res.redirect('/');
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw err;
+        //console.log(res1);
+        res.render('aboutsend', { res1, user: req.user });
+
+        
+    });
+    });
 
 app.get('/profile',
 

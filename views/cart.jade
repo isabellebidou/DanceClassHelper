@@ -20,6 +20,20 @@ block content
                     
             
             tr
-                td(colspan='3') Final total:€ #{total}
-                td buy now 
+                td(colspan='2') Final total:€ #{total}
+                td(colspan='2')
+                 form(action='https://www.sandbox.paypal.com/cgi-bin/webscr', method='post')
+                      
+                  input(type='hidden', name='business', value='danceuser5-facilitator@gmail.com')
+                      
+                  input(type='hidden', name='cmd', value='_xclick')
+                      
+                  input(type='hidden', name='item_name', value='#{items}')
+                  input(type='hidden', name='amount', value='#{total}')
+                  input(type='hidden', name='currency_code', value='USD')
+                      
+                  input(type='image', name='submit', border='0', src='https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif', alt='Buy Now')
+                  img(alt='', border='0', width='1', height='1', src='https://www.paypalobjects.com/en_US/i/scr/pixel.gif') 
+                  input(type='hidden', name='return_url', value='https://ad4a0147e0c4490cb71d1904f520aef3.vfs.cloud9.us-east-2.amazonaws.com/thankyou')
+                  input(type='hidden', name='notify_url', value='https://ad4a0147e0c4490cb71d1904f520aef3.vfs.cloud9.us-east-2.amazonaws.com/aboutsend')
                     
