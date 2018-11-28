@@ -140,7 +140,7 @@ app.post('/login',
     });
 
 
-// cart page
+// cart page used when the user clicks on the cart button
 
 app.get('/cart', function(req, res) {
     console.log("cart");
@@ -149,28 +149,8 @@ app.get('/cart', function(req, res) {
     console.log("req.isAuthenticated() " + req.isAuthenticated());
     console.log("req.session " + JSON.stringify(req.session));
     console.log("req.session.id " + req.session.id);
-    //   console.log("req.session.cart " + req.session.cart.id);
+    fillInCart(req,res);
 
-
-let sql = 'SELECT id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
-    let query3 = db.query(sql, (err, res1) => {
-        console.log(res1);
-        
-        if (err) throw err;
-        var total = 0;
-        var items = " ";
-        for (var i = 0; i<res1.length; i++){
-            total += res1[i].lineTotal;
-            items += " ";
-            items += res1[i].className;
-            console.log(res1[i].className);
-        }
-        console.log(items);
-        res.render('cart', {
-            root: VIEWS,
-            res1, total, items
-        });
-    });
 
     console.log('now you are on the cart view');
 
@@ -186,13 +166,13 @@ app.get('/cart/:id', function(req, res) {
     //   console.log("req.session.cart " + req.session.cart.id);
 
 
-
+    //the order already exists as the customer has already put an item in the cart
     if (req.session.cart == "active") {
 
         // find order id
         var orderId = null;
 
-        let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId ASC LIMIT 1;';
+        let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
         console.log("sql3: " + sql3);
         let query3 = db.query(sql3, (err, res2) => {
             if (err) throw err;
@@ -210,9 +190,9 @@ app.get('/cart/:id', function(req, res) {
         });
 
 
-
+    // this is the first item in the cart
     } else {
-        //make session
+        //1. make session
         req.session.cart = "active";
         console.log("req.session.cart " + req.session.cart);
         //create order
@@ -226,32 +206,46 @@ app.get('/cart/:id', function(req, res) {
         let sql1 = 'INSERT INTO orders (orderReference,orderDate,orderStatus,orderUserId) VALUES("' + req.session.id + '","' + date + '"," pending ","' + req.user.userId + '");'
         let query = db.query(sql1, (err, res2) => {
             if (err) throw err;
-
-        });
-
-        // find order id
+            
+            // 2. find order id
         var orderId = null;
-        //SELECT orderId FROM orders WHERE orderUserId = "1" ORDER BY orderId ASC LIMIT 1
-        let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId ASC LIMIT 1;';
+        
+        let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
         let query3 = db.query(sql3, (err, res2) => {
             if (err) throw err;
             orderId = res2[0].orderId;
             console.log("res2:" + JSON.stringify(res2))
             console.log("sql3: " + sql3);
             console.log("orderId: " + orderId);
-            //create orderItemLine
+            //3. create orderItemLine using the orderid found in query3
 
             let sql2 = 'INSERT INTO orderitems (orderitems.itemId,orderitems.orderId,orderitems.itemQuantity)VALUES("' + parseInt(req.params.id) + '","' + orderId + '","' + 1 + '");'
             console.log("sql2: " + sql2);
             let query2 = db.query(sql2, (err, res3) => {
                 if (err) throw err;
+                //4. fill in the cart
+                fillInCart(req,res);
 
             });
 
         });
 
+        });
+
+        
+
     }
-    let sql = 'SELECT id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
+    //fill in the cart with the order details
+    
+    
+
+
+    console.log('now you are on the cart view');
+
+});
+
+function fillInCart(req,res){
+        let sql = 'SELECT id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
     let query3 = db.query(sql, (err, res1) => {
         if (err) throw err;
 
@@ -268,10 +262,7 @@ app.get('/cart/:id', function(req, res) {
             res1, total, items
         });
     });
-
-    console.log('now you are on the cart view');
-
-});
+}
 
 app.get('/thankyou',
 
@@ -282,18 +273,27 @@ app.get('/thankyou',
 app.get('/aboutsend',
 
     function(req, res) {
+        console.log("req.session.id " + req.session.id);
            let sql = 'UPDATE orders SET orderStatus ="paid by PayPal" WHERE orderReference = "' + req.session.id + '";'
-           req.session.regenerate();
-    console.log("regenerate ");
+           req.session.cart = "paid";
+           req.session.destroy();
+           req.login(req.user, function (err) {
+                if ( ! err ){
+                    res.redirect('/classes');
+                } else {
+                    //handle error
+                }
+            });
+    
     console.log("req.user " + req.user);
 
     console.log("req.isAuthenticated() " + req.isAuthenticated());
-    console.log("req.session " + req.session);
+
     res.redirect('/');
     let query = db.query(sql, (err, res1) => {
         if (err) throw err;
         //console.log(res1);
-        res.render('aboutsend', { res1, user: req.user });
+        //res.render('aboutsend', { res1, user: req.user });
 
         
     });
