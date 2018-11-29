@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: '******',
-    password: '*****',
+    user: 'isabelle_18',
+    password: '123456!!!',
     database: 'isabelle_db',
     port: 3306
 });
@@ -48,8 +48,8 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: '******',
-    password: '******',
+    user: 'isabelle_18',
+    password: '123456!!!',
     database: 'isabelle_db',
     port: 3306
 };
@@ -138,8 +138,77 @@ app.post('/login',
         console.log("req.session " + req.session);
         //res.render('index', { root: VIEWS, req });
     });
+app.get('/removeitem/:id', function(req, res) {
+    // find order id
+        var orderId = null;
+if (req.session.cart == "active") {
+     let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
+     
+             let query3 = db.query(sql3, (err, res2) => {
+            if (err) throw err;
+            console.log("res2:" + res2)
+            orderId = res2[0].orderId;
+            let sql2 = 'DELETE FROM orderitems WHERE orderId ="'+orderId+'" AND itemId = "'+req.params.id+'" LIMIT 1;'
+            console.log("sql2: " + sql2);
+
+            let query2 = db.query(sql2, (err, res3) => {
+                if (err) throw err;
+                fillInCart(req,res);
+
+            });
+    
+
+    
+});
+}
+
+});
+
+app.get('/removeallitems', function(req, res) {
+    
+    emptyCart(req,res);
+});
 
 
+//empty cart
+
+function emptyCart(req,res){
+    
+        // find order id
+        var orderId = null;
+if (req.session.cart == "active") {
+     let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
+     
+             let query3 = db.query(sql3, (err, res2) => {
+            if (err) throw err;
+            console.log("res2:" + res2)
+            orderId = res2[0].orderId;
+            let sql2 = 'DELETE FROM orderitems WHERE orderId ="'+orderId+'" ;'
+            console.log("sql2: " + sql2);
+
+            let query2 = db.query(sql2, (err, res3) => {
+                if (err) throw err;
+                //fillInCart(req,res);
+                let sql1 = 'DELETE FROM orders WHERE orderId ="'+orderId+'" ;'
+            console.log("sql1: " + sql1);
+            
+            let query1 = db.query(sql1, (err, res3) => {
+                if (err) throw err;
+                req.session.cart = " ";
+                fillInCart(req,res);
+                
+
+            });
+
+            });
+    
+
+    
+});
+
+}
+    
+}
 // cart page used when the user clicks on the cart button
 
 app.get('/cart', function(req, res) {
@@ -183,6 +252,7 @@ app.get('/cart/:id', function(req, res) {
 
             let query2 = db.query(sql2, (err, res3) => {
                 if (err) throw err;
+                fillInCart(req,res);
                 
 
             });
@@ -245,7 +315,7 @@ app.get('/cart/:id', function(req, res) {
 });
 
 function fillInCart(req,res){
-        let sql = 'SELECT id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
+        let sql = 'SELECT orderitemsview.id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
     let query3 = db.query(sql, (err, res1) => {
         if (err) throw err;
 
@@ -276,25 +346,25 @@ app.get('/aboutsend',
         console.log("req.session.id " + req.session.id);
            let sql = 'UPDATE orders SET orderStatus ="paid by PayPal" WHERE orderReference = "' + req.session.id + '";'
            req.session.cart = "paid";
-           req.session.destroy();
-           req.login(req.user, function (err) {
-                if ( ! err ){
-                    res.redirect('/classes');
-                } else {
-                    //handle error
-                }
-            });
+           //req.session.destroy();
+        //   req.login(req.user, function (err) {
+        //         if ( ! err ){
+        //             res.redirect('/classes');
+        //         } else {
+        //             //handle error
+        //         }
+        //     });
+    //empty the cart
     
-    console.log("req.user " + req.user);
+    emptyCart(req,res);
 
-    console.log("req.isAuthenticated() " + req.isAuthenticated());
 
-    res.redirect('/');
+    
     let query = db.query(sql, (err, res1) => {
         if (err) throw err;
         //console.log(res1);
         //res.render('aboutsend', { res1, user: req.user });
-
+res.redirect('/');
         
     });
     });
@@ -740,7 +810,7 @@ app.post('/creatcart', require('connect-ensure-login').ensureLoggedIn(), functio
     });
 });
 
-//edit data of  muscle table entry on post on button press
+//edit data of  cart
 app.get('/editcart/:id', require('connect-ensure-login').ensureLoggedIn(), function(req, res) {
     let sql = 'SELECT * FROM cart WHERE cartId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {

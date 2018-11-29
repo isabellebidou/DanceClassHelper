@@ -9,6 +9,8 @@ block content
                 th order
                 th quantity
                 th total
+                th 
+                    a.button(href="/removeallitems") empty cart
             each row in res1
                 tr
                     
@@ -16,6 +18,9 @@ block content
                     td #{row.orderId}
                     td #{row.quantity}
                     td €#{row.lineTotal}
+                    td 
+                        a.button(href="/removeitem/#{row.id}") remove item
+                        
                     
                     
             
