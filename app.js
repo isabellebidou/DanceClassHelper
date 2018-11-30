@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: 'isabelle_18',
-    password: '123456!!!',
+    user: '******',
+    password: '******',
     database: 'isabelle_db',
     port: 3306
 });
@@ -48,8 +48,8 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: 'isabelle_18',
-    password: '123456!!!',
+    user: '******',
+    password: '******',
     database: 'isabelle_db',
     port: 3306
 };
@@ -1239,8 +1239,70 @@ function authenticationMiddleware() {
     }
 }
 
+// --------------------------------SEARCH
 
 
+
+//post request to search for a step
+app.post('/searchsteps', function(req, res) {
+//var input = document.getElementById("search").value;
+//console.log(JSON.stringify(req.body));
+var filteredStepsList= [];
+
+console.log(req.body.search);
+for (var i = 0; i<steps.length; i++){
+    
+      if (steps[i].name.toUpperCase().includes(req.body.search.toUpperCase()) || steps[i].family.toUpperCase().includes(req.body.search.toUpperCase()) || steps[i].category.toUpperCase().includes(req.body.search.toUpperCase()) ){
+        filteredStepsList.push(steps[i]);
+    }
+    
+
+}
+
+res.render("steps", {
+        steps: filteredStepsList
+    });
+    console.log("steps");
+    console.log('now you are on filtered steps');
+
+});
+
+//post request to search for a class
+app.post('/searchclasses', function(req, res) {
+//var input = document.getElementById("search").value;
+//console.log(JSON.stringify(req.body));
+
+let sql = 'select * FROM classes WHERE className LIKE "'+req.body.search+'" OR classComments LIKE "%'+req.body.search+'%" ; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw err;
+        console.log(res1);
+
+        res.render('classes', {
+            root: VIEWS,
+            res1
+        });
+    });
+    console.log('now you are on filtered classes');
+
+});
+//post request to search for a user
+app.post('/searchusers', function(req, res) {
+//var input = document.getElementById("search").value;
+//console.log(JSON.stringify(req.body));
+
+let sql = 'select * FROM danceclassusers WHERE userFirstName LIKE "'+req.body.search+'" OR userLastName LIKE "'+req.body.search+'" OR userEmail LIKE "'+req.body.search+'"; '
+    let query = db.query(sql, (err, res1) => {
+        if (err) throw err;
+        console.log(res1);
+
+        res.render('students', {
+            root: VIEWS,
+            res1
+        });
+    });
+    console.log('now you are on filtered students');
+
+});
 
 //set up the environment for the app to run
 app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {

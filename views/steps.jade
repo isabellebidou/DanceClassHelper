@@ -1,6 +1,9 @@
 extends layout
 block content
       .maincontent
+       form(method="post" action="/searchsteps")
+              input(name="search", type="text", Placeholder="Search For a step...") 
+              button.button(type="submit") Search
         
           h2 Here are the steps we need to know
            .grid-container
