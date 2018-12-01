@@ -6,28 +6,16 @@ block content
           form(method = "POST")
 
               label(for= "firstname") first name:
-              input(name= "firstname", type = "text", placeholder = " firstname", required) 
+              input(name= "firstname", autocomplete ="off", type = "text", pattern="[a-z]{3,}", title="Must contain letters", placeholder = " firstname", required) 
               label(for= "lastname") last name:
-              input(name= "lastname", type ="text", placeholder = "lastname", required)
-              label(for= "datejoined") date joined:
-              input(name= "datejoined", type = "date", placeholder = "date joined") 
+              input(name= "lastname", autocomplete ="off", type ="text", pattern="[a-z]{3,}",title="Must contain letters", placeholder = "lastname", required)
               label(for= "comments") comments:
               input(name= "comments", type ="text", placeholder = "comments")
               label(for= "email") email:
-              input(name= "email", type = "text", pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", placeholder = "enter email", required)
+              input(name= "email", type = "text", pattern ="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", placeholder = "enter email", required)
               label(for= "password") Password:
-              input(name= "password", type = "text", placeholder = "enter password", required)
+              input(name= "password", type = "text", pattern="(?=.*\d)(?=.*[A-Z])(?=.*[a-z]){6,}", title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters",placeholder = "enter password", required)
               br
-              label(for= "role") role:
-              input(type='radio', name='role', value='student', checked='')
-              |  student
-              input(type='radio', name='role', value='teacher')
-              |  teacher
+              
               br
-              label(for= "active") active:
-              input(type='radio', name='active', value='active', checked='')
-              |  active
-              input(type='radio', name='active', value='inactive')
-              |  inactive
-              br
-              button.button(type="submit") Create the user
+              button.button(type="submit") OK

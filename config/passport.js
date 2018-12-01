@@ -23,8 +23,8 @@ var mysql = require('mysql');
 
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: '******',
-    password: '******',
+    user: 'isabelle_18',
+    password: '123456!!!',
     database: 'isabelle_db',
     port: 3306
 });
@@ -117,9 +117,11 @@ passport.use('local-register', new LocalStrategy({
                 console.log("new object");
                 console.log("email :"+ email);
                 newUserMysql.userFirstName = req.body.firstname;
+                newUserMysql.userLastName = req.body.lastname;
 				newUserMysql.userEmail    = email;
                 newUserMysql.userPassword = password; 
                 newUserMysql.userRole = role;
+                newUserMysql.active = active;
                  let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + datejoined + '","' + req.body.comments + '","' + email + '","' + password + '","' + role +  '","' + active + '");';
 				//var insertQuery = "INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
 					console.log(sql);
@@ -265,11 +267,11 @@ passport.use('local-updateuser', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
         username : 'email',
         password : 'password',
-        passReqToCallback : true // allows us to pass back the entire request to the callback
+        passReqToCallback : true 
     },
-    function(req, email, password,done) { // callback with email and password from our form
-    console.log("local-login");
-         let query = db.query("SELECT userId, userFirstName, userEmail, userPassword, userRole FROM `danceclassusers` WHERE `userEmail` = '" + email + "'",function(err,rows){
+    function(req, email, password,done) { 
+    console.log("local-login: "+email);
+         let query = db.query("SELECT userId, userFirstName, userLastName, userEmail, userPassword, userRole, userActive FROM `danceclassusers` WHERE `userEmail` = '" + email + "'",function(err,rows){
 			if (err)
                 return done(err);
 			 if (!rows.length) {
@@ -286,8 +288,7 @@ passport.use('local-updateuser', new LocalStrategy({
 
             // all is well, return successful user
             console.log("logged in "+rows[0].userEmail+ "  role: "+rows[0].userRole);
-           // return done(null, rows[0]);
-          // return rows[0];
+
           return done(null, rows[0]);
           				    
 

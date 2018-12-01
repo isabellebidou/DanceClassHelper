@@ -21,7 +21,7 @@ block content
                       a.button(href="/class/#{row.classId}") Show
                       a.button(href='/editclass/#{row.classId}') Edit
                       a.button(href='/deleteclass/#{row.classId}') Delete
-                  else
+                  else if user.userActive == "active"
                     .item
                       label Class name: 
                       h2.itemtitle #{row.className}
@@ -29,6 +29,14 @@ block content
                       h2.itemtitle #{row.classDate}
                       a.button(href="/cart/#{row.classId}") Add to cart
                       a.button(href="/class/#{row.classId}") Show
+                  else
+                    .item
+                      label Class name: 
+                      h2.itemtitle #{row.className}
+                      label Class date: 
+                      h2.itemtitle #{row.classDate}
+                      p account is still being processed
+                    
 
                     
                   

@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: '******',
-    password: '******',
+    user: 'isabelle_18',
+    password: '123456!!!',
     database: 'isabelle_db',
     port: 3306
 });
@@ -48,8 +48,8 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: '******',
-    password: '******',
+    user: 'isabelle_18',
+    password: '123456!!!',
     database: 'isabelle_db',
     port: 3306
 };
@@ -74,6 +74,18 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
     res.locals.user = req.user;
     next();
+});
+
+//emails
+//https://www.w3schools.com/nodejs/nodejs_email.asp
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'danceuser5@gmail.com',
+    pass: 'D@nceUs3r5'
+  }
 });
 
 //home page
@@ -176,7 +188,7 @@ function emptyCart(req,res){
     
         // find order id
         var orderId = null;
-if (req.session.cart == "active") {
+//if (req.session.cart == "active") {
      let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
      
              let query3 = db.query(sql3, (err, res2) => {
@@ -206,7 +218,7 @@ if (req.session.cart == "active") {
     
 });
 
-}
+//}
     
 }
 // cart page used when the user clicks on the cart button
@@ -355,15 +367,12 @@ app.get('/aboutsend',
         //         }
         //     });
     //empty the cart
-    
-    emptyCart(req,res);
 
-
-    
     let query = db.query(sql, (err, res1) => {
         if (err) throw err;
         //console.log(res1);
         //res.render('aboutsend', { res1, user: req.user });
+        emptyCart(req,res);
 res.redirect('/');
         
     });
@@ -460,6 +469,52 @@ app.post('/register',
         console.log("register -local-register");
         console.log(req.user);
         console.log(req.isAuthenticated());
+        
+        var mailOptions = {
+  from: 'danceuser5@gmail.com',
+  to: 'danceuser5@gmail.com',
+  subject: "new registration",
+  text: "first name: "+req.user.userFirstName+ " last name: "+ req.user.userLastName
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
+        var mailOptions = {
+  from: 'danceuser5@gmail.com',
+  to: req.user.userEmail,
+  subject: "Thank you for registering",
+  html: '<h1>dear '+req.user.userFirstName+ '</h1><p>your registration is being processed </p><p>Thanks and Regards</p>'
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
+
+var mailOptions = {
+  from: 'danceuser5@gmail.com',
+  to: 'isa.bidou@gmail.com',
+  subject: "Thank you for registering copy",
+  html: '<h1>dear '+req.user.userFirstName+ '</h1><p>your regisration is being processed </p><p>Thanks and Regards</p>'
+  
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
+        
         res.redirect('/');
     });
 
