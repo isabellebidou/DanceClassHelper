@@ -1,73 +1,31 @@
 //INSPIRED BY https://gist.github.com/manjeshpv/84446e6aa5b3689e8b84
 
-// config/passport.js
 
-// load all the things we need
-
-// config/passport.js
-				
-// load all the things we need
 var passport = require('passport');
 var utils = require('../utils.js');
 var LocalStrategy   = require('passport-local').Strategy;
-// //passport    http://www.passportjs.org/docs/username-password/
-
-// app.use(passport.initialize());
-// app.use(passport.session());
 var LocalStrategy   = require('passport-local').Strategy;
 var session = require('express-session');
-
+var express = require("express"); // call expresss to be used by application
+var app = express();
+var flash = require('express-flash-messages')
+app.use(flash())
 
 
 var mysql = require('mysql');
 
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: 'isabelle_18',
-    password: '123456!!!',
+    user: '******',
+    password: '******',
     database: 'isabelle_db',
     port: 3306
 });
 
 
-
 module.exports = function(passport) {
 
-	// =========================================================================
-    // passport session setup ==================================================
-    // =========================================================================
-    // required for persistent login sessions
-    // passport needs ability to serialize and unserialize users out of session
 
-//     // used to serialize the user for the session
-//     passport.serializeUser(function(user, done) {
-// 		done(null, user.id);
-//     });
-
-//     // used to deserialize the user
-//     passport.deserializeUser(function(id, done) {
-// 		let query = db.query("select * from danceclassusers where userId = "+id,function(err,rows){
-// 			done(err, rows[0]);
-// 		});
-//     });
-
-
-
-    
-    
-// passport.serializeUser(function(user, done) {
-//   done(null, user);
-// });
-// passport.deserializeUser(function(id, done) {
-
-    
-//     db.query("select * from danceclassusers where id = "+id,function(err,rows){	
-// 			done(err, rows[0]);
-// 		});
-
-// });
-    
-     	// =========================================================================
     // LOCAL Self_SIGNUP ============================================================
     // =========================================================================
     // we are using named strategies since we have one for login and one for signup
@@ -76,14 +34,11 @@ module.exports = function(passport) {
 passport.use('local-register', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
-    //are there other options?
-    //emailField did not seem to do anything
     passReqToCallback: true
 },
     function(req, email, password, done) {
     console.log("local-register");
-		// find a user whose email is the same as the forms email
-		// we are checking to see if the user trying to login already exists
+//------------------------------------check if email is already in use
         let query = db.query("SELECT * FROM danceclassusers where userEmail = '"+email+"'",function(err,rows){
 			console.log(rows);
 			
@@ -91,20 +46,20 @@ passport.use('local-register', new LocalStrategy({
 			if (err){
 			    console.log(err);
                 return done(err);
-			
 			    
 			}
 			    
 			 if (rows.length) {
 			     console.log("email is already taken");
-                //return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+			     req.flash('notify', 'That email is already taken.')
+                
                 return done(null, false);
             } else {
                 console.log("else");
 				// if there is no user with that email
                 // create the user
                
-                //var datejoined = new Date();
+               
                 var d = new Date();
                 var datejoined = "";
                 var y = utils.addZero(d.getFullYear(), 4);
@@ -125,12 +80,7 @@ passport.use('local-register', new LocalStrategy({
                  let sql = 'INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + datejoined + '","' + req.body.comments + '","' + email + '","' + password + '","' + role +  '","' + active + '");';
 				//var insertQuery = "INSERT INTO danceclassusers (userFirstName,userLastName,userDateJoined,userComments,userEmail,userPassword,userRole,userActive) VALUES ("' + req.body.firstname + '","' + req.body.lastname + '","' + req.body.datejoined + '","' + req.body.comments + '","' + req.body.email + '","' + req.body.password + '","' + req.body.role +  '","' + req.body.active + '");'
 					console.log(sql);
-				// let query = db.query(sql,function(err,rows){
-				// newUserMysql.id = rows.insertId;
-
-				// return done(null, newUserMysql);
-				// });
-				
+			
 				let query = db.query(sql,function(err,rows){
 				newUserMysql.userId = rows.insertId;
 				
@@ -171,8 +121,6 @@ passport.use('local-register', new LocalStrategy({
 passport.use('local-signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
-    //are there other options?
-    //emailField did not seem to do anything
     passReqToCallback: true
 },
     function(req, email, password, done) {
@@ -192,7 +140,8 @@ passport.use('local-signup', new LocalStrategy({
 			    
 			 if (rows.length) {
 			     console.log("email is already taken");
-                return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+			     req.flash('notify', 'That email is already taken.')
+                return done(null, false);
             } else {
                 console.log("else");
 				// if there is no user with that email
@@ -276,13 +225,16 @@ passport.use('local-updateuser', new LocalStrategy({
                 return done(err);
 			 if (!rows.length) {
 			 console.log("No user found");
+			 req.flash('notify', 'No user found.')
                 return done(null, false); 
             }
 
 			// if the user is found but the password is wrong
             if (!( rows[0].userPassword == password)){
                  console.log("Oops! Wrong password");
-                return done(null, false); 
+                req.flash('notify', 'Wrong password.')
+                
+                return done(null, false);
             }
                 
 

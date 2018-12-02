@@ -3,7 +3,13 @@ block content
       .maincontent
         .formHold
           h1.itemtitle Register
+          if notification
+            if showNotification
+            ul
+            each msg in showNotification
+              li.notify #{msg}
           form(method = "POST")
+            
 
               label(for= "firstname") first name:
               input(name= "firstname", autocomplete ="off", type = "text", pattern="[a-z]{3,}", title="Must contain letters", placeholder = " firstname", required) 
@@ -19,3 +25,4 @@ block content
               
               br
               button.button(type="submit") OK
+              

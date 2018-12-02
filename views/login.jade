@@ -3,8 +3,13 @@ block content
       .maincontent
         .formHold
           h1.itemtitle Login
+          if notification
+            if showNotification
+            ul
+            each msg in showNotification
+              li.notify #{msg}
 
-                form(action='/login', method='post')
+          form(action='/login', method='post')
                   div
                     label Username:
                     input(type='text', name='username')

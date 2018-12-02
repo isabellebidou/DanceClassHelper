@@ -3,6 +3,11 @@ block content
       .maincontent
         .formHold
           h1.itemtitle Add a user
+          if notification
+            if showNotification
+            ul
+            each msg in showNotification
+              li.notify #{msg}
           form(method = "POST")
             fieldset
               label(for= "firstname") first name:

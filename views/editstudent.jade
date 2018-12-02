@@ -19,11 +19,12 @@ block content
                 label(for= "newpassword") password:
                 input(name= "newpassword", type = "password", value = "#{row.userPassword}") 
                 label(for= "role") role:
-                input(type='radio', name='newrole', value='student', checked = "#{row.userRole}" == "student")
-                |  student
-                input(type='radio', name='newrole', value='teacher',checked = "#{row.userRole}" == "teacher")
-                |  teacher
-                br
+                  
+                  input(type='radio', name='newrole', value='student', checked = "#{row.userRole}" == "student")
+                  |student
+                  input(type='radio', name='newrole', value='teacher',checked = "#{row.userRole}" == "teacher")
+                  |  teacher
+                  br
                 label(for= "active") active:
                 input(type='radio', name='newactive', value='active', checked = "#{row.userActive}" == "active")
                 |  active
