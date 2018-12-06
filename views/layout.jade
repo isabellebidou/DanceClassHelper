@@ -43,7 +43,6 @@ html
                 a(href='/classes') Classes
                 a(href='/createclass') add Classes
                 a(href='/steps') steps
-                a(href='/addstep') add steps
                 a(href='/students') Students
                 a(href='/createuser') add Students
                 a(href='/logout') Logout
@@ -76,8 +75,8 @@ html
         #mobilemenu
         
           ul#mobilemenuul
-            if req 
-              if req.user.userRole == "teacher"
+            if isAuthenticated
+              if user.userRole == "teacher"
           
                 li
                   a.mobilemenuli(href='/') Home
@@ -92,14 +91,8 @@ html
                 li
                   a.mobilemenuli(href='/steps') Steps
                 li
-                  a.mobilemenuli(href='/addstep') Add Step
-                li
-                  a.mobilemenuli(href='/login') Login
-                li
-                  a.mobilemenuli(href='/register') Register
-                li
                   a.mobilemenuli(href='/logout') Logout
-              else
+              else if user.userActive == "active"
 
                 li
                   a.mobilemenuli(href='/') Home
@@ -108,9 +101,14 @@ html
                 li
                   a.mobilemenuli(href='/steps') Steps
                 li
-                  a.mobilemenuli(href='/login') Login
+                  a.mobilemenuli(href='/cart') Login
                 li
-                  a.mobilemenuli(href='/register') Register
+                  a.mobilemenuli(href='/logout') Logout
+              else
+               li
+                  a.mobilemenuli(href='/classes') Classes
+                li
+                  a.mobilemenuli(href='/steps') Steps
                 li
                   a.mobilemenuli(href='/logout') Logout
             else
@@ -121,8 +119,7 @@ html
                 a.mobilemenuli(href='/login') Login
               li
                 a.mobilemenuli(href='/register') Register
-              li
-                a.mobilemenuli(href='/logout') Logout
+
         
      .footer
           p   Isabelle Bidou - copyright 2018

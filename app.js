@@ -51,8 +51,8 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var options = {
 	host: 'isabellebidou.com',
-	user: '******',
-	password: '******',
+	user: '*****',
+	password: '*****',
 	database: 'isabelle_db',
 	port: 3306
 };
@@ -353,6 +353,7 @@ function fillInCart(req, res) {
 			items += " ";
 			items += res1[i].className;
 		}
+		updateOrderTotal(req,total);
 
 		res.render('cart', {
 			root: VIEWS,
@@ -362,7 +363,22 @@ function fillInCart(req, res) {
 		});
 	});
 }
+function updateOrderTotal(req,total){
+	
+	let sql = 'UPDATE orders SET orderTotal ="'+total+'" WHERE orderReference = "' + req.session.id + '";'
+		req.session.cart = "paid";
 
+
+		let query = db.query(sql, (err, res1) => {
+			if (err) throw err;
+		
+
+
+		});
+	
+	
+	
+}
 app.get('/thankyou',
 
 	function (req, res) {
@@ -445,8 +461,12 @@ app.get('/class/:id', function (req, res) {
 
 app.get('/student/:id', function (req, res) {
 
-	let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
-	let query = db.query(sql, (err, res1) => {
+
+	let sql1 = 'SELECT * from danceclassusers WHERE userId = "' + req.params.id + '"; '
+	let query = db.query(sql1, (err, res1) => {
+		
+
+		
 		if (err) throw (err);
 		res.render('student', {
 			root: VIEWS,
@@ -456,6 +476,57 @@ app.get('/student/:id', function (req, res) {
 	});
 
 	console.log("Now you are on the student page!");
+});
+
+app.get('/studentpayments/:id', function (req, res) {
+
+	let sql = 'SELECT * from userspaymentsview WHERE userId = "' + req.params.id + '"; '
+	
+	let query = db.query(sql, (err, res1) => {
+
+		
+		if (err) throw (err);
+		res.render('studentpayments', {
+			root: VIEWS,
+			res1
+		});
+
+	});
+
+	console.log("Now you are on the student payment page!");
+});
+
+
+
+app.get('/editstudentpayments/:id', function (req, res) {
+
+	let sql = 'SELECT * from orders WHERE orderId = "' + req.params.id + '"; '
+	
+	let query = db.query(sql, (err, res1) => {
+
+		
+		if (err) throw (err);
+		res.render('editstudentpayments', {
+			root: VIEWS,
+			res1
+		});
+
+	});
+
+	console.log("Now you are on the edit student payments page!");
+});
+
+app.post('/editstudentpayments/:id', function (req, res) {
+
+	let sql = 'UPDATE orders SET orderStatus= "' + req.body.neworderstatus + '" , orderTotal = "' + req.body.newordertotal + '" WHERE orderId = "' + req.params.id + '" ;'
+
+	let query = db.query(sql, (err, res1) => {
+		if (err) throw (err);
+		console.log(res1);
+
+	});
+	res.redirect(/studentpayments/ + req.params.id);
+
 });
 
 
@@ -574,6 +645,12 @@ app.get('/createordersitemview', function (req, res) {
 	});
 });
 
+app.get('/createuserpaymenstsview', function (req, res) {
+	let sql = 'CREATE VIEW userspaymentsview AS SELECT danceclassusers.userId AS userId, danceclassusers.userFirstName AS userFirstName, danceclassusers.userLastName AS userLastName, danceclassusers.userDateJoined AS userDateJoined,danceclassusers.userComments AS userComments, danceclassusers.userEmail  AS userEmail, danceclassusers.userPassword AS userPassword, danceclassusers.userRole AS userRole, danceclassusers.userActive  AS userActive, orders.orderId AS orderId, orders.orderStatus AS orderStatus, orders.orderTotal AS orderTotal, classes.className AS className FROM danceclassusers INNER JOIN orders ON danceclassusers.userId = orders.orderUserId INNER Join orderitems ON orderitems.orderId = orders.orderId INNER Join classes ON classes.classId = orderitems.itemId;'
+	let query = db.query(sql, (err, res) => {
+		if (err) throw err;
+	});
+});
 
 // app.get('/createuserrolestable', function(req, res) {
 //     let sql = 'CREATE TABLE userRoles (userRolesId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userRolesName varchar(255));'
@@ -783,7 +860,7 @@ app.post('/createuser',
 	});
 
 //edit data of  user table entry on post on button press
-app.get('/editstudent/:id', authenticationMiddleware(), function (req, res) {
+app.get('/editstudent/:id', function (req, res) {
 	let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
 	let query = db.query(sql, (err, res1) => {
 		if (err) throw (err);

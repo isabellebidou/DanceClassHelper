@@ -379,7 +379,7 @@ th,td{
     .maincontent{
         color:white;
         position: absolute;
-        height: auto;
+        height: 100%;
         width: 85%;
         right:5%;
         top:22%;
@@ -412,7 +412,7 @@ th,td{
   
         width: 100%;
         right:10%;
-        height:90%;
+        height:auto;
         vertical-align:top;
         display: inline-block;
         background-image: url('/dave-contrerassmall.png');
@@ -429,7 +429,7 @@ th,td{
 .intro,.conclusion{
     position:static;
     width: 100%;
-    height:90%;
+    height:auto;
 }
 .headertitle{
     color:white;
