@@ -1,0 +1,18 @@
+extends layout
+block content
+      
+    .maincontent
+        .formHold
+          h1.itemtitle Edit this payment
+          
+          each row in res1
+            form(method = "post")
+              fieldset
+                label(for= "neworderstatus") Order Status:
+                input(name= "neworderstatus", type = "text", value = "#{row.orderStatus}") 
+                label(for= "newordertotal") last name:
+                input(name= "newordertotal", type = "text", value = "#{row.orderTotal}") 
+                p.itemp #{row.orderId}
+                
+
+                button.button(type="submit") Update

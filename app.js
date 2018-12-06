@@ -2,7 +2,6 @@ var express = require("express"); // call expresss to be used by application
 var app = express();
 var passport = require("passport")
 var mysql = require('mysql'); // allow access to sql
-//var flash = require("flash");
 var bodyParser = require('body-parser');
 var fs = require("fs");
 var behaviour = require('./behaviour.js');
@@ -12,7 +11,6 @@ const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
 app.use(express.static("images"));
 var flash = require('express-flash-messages')
-
 
 
 var session = require('express-session');
@@ -47,12 +45,12 @@ require('./config/passport')(passport);
 
 
 var LocalStrategy = require('passport-local').Strategy;
-//app.use(session({ secret: "topsecret" }));
+
 
 var options = {
 	host: 'isabellebidou.com',
-	user: '*****',
-	password: '*****',
+	user: '******',
+	password: '******',
 	database: 'isabelle_db',
 	port: 3306
 };
@@ -130,46 +128,41 @@ app.get('/logout', function (req, res) {
 app.get('/login',
 	function (req, res) {
 		//
-		    const flashMessages = res.locals.getMessages();
-    console.log(flashMessages);
+		const flashMessages = res.locals.getMessages();
+		console.log(flashMessages);
 
 
-	
-	if(flashMessages.notify){
-		res.render('login', {
-		root: VIEWS,
-		notification:true,
-		showNotification:flashMessages.notify
-	});
-		
-	}else if(flashMessages.error){
-		res.render('login', {
-		root: VIEWS,
-		notification:true,
-		showNotification:flashMessages.error
-	});
-		
-	}else{
-		res.render('login', {
-		root: VIEWS
-	});
-	}
-		
-		//
+		if (flashMessages.notify) {
+			res.render('login', {
+				root: VIEWS,
+				notification: true,
+				showNotification: flashMessages.notify
+			});
+
+		} else if (flashMessages.error) {
+			res.render('login', {
+				root: VIEWS,
+				notification: true,
+				showNotification: flashMessages.error
+			});
+
+		} else {
+			res.render('login', {
+				root: VIEWS
+			});
+		}
+
 
 		console.log('now you are on the login page');
 	});
 
 app.post('/login',
 	passport.authenticate('local-login', {
-		failureRedirect: '/login',failureFlash:true,
+		failureRedirect: '/login',
+		failureFlash: true,
 		successRedirect: '/classes'
 	}),
 	function (req, res) {
-		//req.session.email = req.user.userRole;
-		//console.log(req.user.userRole);
-		//console.log("req.session.email: "+req.session.email);
-		//res.redirect('/');
 		console.log("login ");
 		console.log("req.user " + req.user);
 		console.log("req.user.userRole " + req.user.userRole);
@@ -223,20 +216,26 @@ function emptyCart(req, res) {
 		let sql2 = 'DELETE FROM orderitems WHERE orderId ="' + orderId + '" ;'
 		console.log("sql2: " + sql2);
 
-		let query2 = db.query(sql2, (err, res3) => {
-			if (err) throw err;
-			//fillInCart(req,res);
-			let sql1 = 'DELETE FROM orders WHERE orderId ="' + orderId + '" ;'
-			console.log("sql1: " + sql1);
-
-			let query1 = db.query(sql1, (err, res3) => {
+		if (req.session.cart == "paid") {
+			fillInCart(req, res);
+		} else {
+			let query2 = db.query(sql2, (err, res3) => {
 				if (err) throw err;
-				req.session.cart = " ";
-				fillInCart(req, res);
+				//fillInCart(req,res);
+				let sql1 = 'DELETE FROM orders WHERE orderId ="' + orderId + '" ;'
+				console.log("sql1: " + sql1);
+
+				let query1 = db.query(sql1, (err, res3) => {
+					if (err) throw err;
+					req.session.cart = " ";
+					fillInCart(req, res);
+
+
+				});
 
 			});
+		}
 
-		});
 
 	});
 
@@ -342,42 +341,63 @@ app.get('/cart/:id', function (req, res) {
 });
 
 function fillInCart(req, res) {
-	let sql = 'SELECT orderitemsview.id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
-	let query3 = db.query(sql, (err, res1) => {
-		if (err) throw err;
+	if (req.session.cart == "active") {
 
+		var orderId = null;
+		let sql = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
+		//	let sql = 'SELECT orderitemsview.id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderReference = "' + req.session.id + '";'
+		let query3 = db.query(sql, (err, res1) => {
+			if (err) throw err;
+			orderId = res1[0].orderId;
+			let sql2 = 'SELECT orderitemsview.id, orderitemsview.className, orderitemsview.orderId, orderitemsview.price, orderitemsview.quantity, orderitemsview.lineTotal FROM orderitemsview INNER JOIN orders ON orders.orderId = orderitemsview.orderId WHERE orders.orderId = "' + orderId + '";'
+
+			let query2 = db.query(sql2, (err, res1) => {
+				if (err) throw err;
+				var total = 0;
+				var items = " ";
+				for (var i = 0; i < res1.length; i++) {
+					total += res1[i].lineTotal;
+					items += " ";
+					items += res1[i].className;
+				}
+				updateOrderTotal(req, total);
+
+				res.render('cart', {
+					root: VIEWS,
+					res1,
+					total,
+					items
+				});
+			});
+		});
+	} else {
+
+		var res1 = [];
 		var total = 0;
-		var items = " ";
-		for (var i = 0; i < res1.length; i++) {
-			total += res1[i].lineTotal;
-			items += " ";
-			items += res1[i].className;
-		}
-		updateOrderTotal(req,total);
-
+		var items = "";
 		res.render('cart', {
 			root: VIEWS,
 			res1,
 			total,
 			items
 		});
-	});
+
+	}
+
 }
-function updateOrderTotal(req,total){
-	
-	let sql = 'UPDATE orders SET orderTotal ="'+total+'" WHERE orderReference = "' + req.session.id + '";'
-		req.session.cart = "paid";
+
+function updateOrderTotal(req, total) {
+
+	let sql = 'UPDATE orders SET orderTotal ="' + total + '" WHERE orderReference = "' + req.session.id + '";'
 
 
-		let query = db.query(sql, (err, res1) => {
-			if (err) throw err;
-		
+	let query = db.query(sql, (err, res1) => {
+		if (err) throw err;
 
 
-		});
-	
-	
-	
+	});
+
+
 }
 app.get('/thankyou',
 
@@ -403,7 +423,7 @@ app.get('/aboutsend',
 
 		});
 	});
-//TODO
+//**TODO**
 app.get('/profile',
 
 	function (req, res) {
@@ -464,9 +484,8 @@ app.get('/student/:id', function (req, res) {
 
 	let sql1 = 'SELECT * from danceclassusers WHERE userId = "' + req.params.id + '"; '
 	let query = db.query(sql1, (err, res1) => {
-		
 
-		
+
 		if (err) throw (err);
 		res.render('student', {
 			root: VIEWS,
@@ -481,10 +500,10 @@ app.get('/student/:id', function (req, res) {
 app.get('/studentpayments/:id', function (req, res) {
 
 	let sql = 'SELECT * from userspaymentsview WHERE userId = "' + req.params.id + '"; '
-	
+
 	let query = db.query(sql, (err, res1) => {
 
-		
+
 		if (err) throw (err);
 		res.render('studentpayments', {
 			root: VIEWS,
@@ -497,14 +516,13 @@ app.get('/studentpayments/:id', function (req, res) {
 });
 
 
-
 app.get('/editstudentpayments/:id', function (req, res) {
 
 	let sql = 'SELECT * from orders WHERE orderId = "' + req.params.id + '"; '
-	
+
 	let query = db.query(sql, (err, res1) => {
 
-		
+
 		if (err) throw (err);
 		res.render('editstudentpayments', {
 			root: VIEWS,
@@ -523,40 +541,46 @@ app.post('/editstudentpayments/:id', function (req, res) {
 	let query = db.query(sql, (err, res1) => {
 		if (err) throw (err);
 		console.log(res1);
+		res.redirect('/');
+		// res.render('/editstudentpayments/:' + req.params.id + '', {
+		// 	root: VIEWS,
+		// 	res1
+		// });
 
 	});
-	res.redirect(/studentpayments/ + req.params.id);
+
 
 });
 
 
 //register page
 app.get('/register', function (req, res) {
-    const flashMessages = res.locals.getMessages();
-    console.log(flashMessages);
+	const flashMessages = res.locals.getMessages();
+	console.log(flashMessages);
 
 	// res.sendFile('index.html', {root: VIEWS},behaviour);
-	
-	if(flashMessages.notify){
+
+	if (flashMessages.notify) {
 		res.render('register', {
-		root: VIEWS,
-		notification:true,
-		showNotification:flashMessages.notify
-	});
-		
-	}else{
+			root: VIEWS,
+			notification: true,
+			showNotification: flashMessages.notify
+		});
+
+	} else {
 		res.render('register', {
-		root: VIEWS
-	});
+			root: VIEWS
+		});
 	}
-	
+
 	console.log('now you ready to register');
 
 });
 
 app.post('/register',
 	passport.authenticate('local-register', {
-		failureRedirect: '/register',failureFlash:true
+		failureRedirect: '/register',
+		failureFlash: true
 	}),
 
 	function (req, res) {
@@ -652,19 +676,6 @@ app.get('/createuserpaymenstsview', function (req, res) {
 	});
 });
 
-// app.get('/createuserrolestable', function(req, res) {
-//     let sql = 'CREATE TABLE userRoles (userRolesId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userRolesName varchar(255));'
-//     let query = db.query(sql, (err, res) => {
-//         if (err) throw err;
-//     });
-// });
-
-// app.get('/createuserstable', function(req, res) {
-//     let sql = 'CREATE TABLE danceclassusers (userId int NOT NULL AUTO_INCREMENT PRIMARY KEY, userFirstName varchar(255), userLastName varchar(255), userDateJoined date,  userComments varchar(255),userEmail varchar(50), userPassword varchar(12),userRolesId int,userActive boolean,FOREIGN KEY (userRolesId) REFERENCES userRoles(userRolesId));'
-//     let query = db.query(sql, (err, res) => {
-//         if (err) throw err;
-//     });
-// });
 
 // app.get('/createclassestable', function(req, res) {
 
@@ -821,28 +832,28 @@ app.get('/deleteclass/:id', function (req, res) {
 
 //createuser page createuser
 app.get('/createuser', function (req, res) {
-	
+
 	//
-	    const flashMessages = res.locals.getMessages();
-    console.log(flashMessages);
+	const flashMessages = res.locals.getMessages();
+	console.log(flashMessages);
 
 	// res.sendFile('index.html', {root: VIEWS},behaviour);
-	
-	if(flashMessages.notify){
+
+	if (flashMessages.notify) {
 		res.render('createuser', {
-		root: VIEWS,
-		notification:true,
-		showNotification:flashMessages.notify
-	});
-		
-	}else{
+			root: VIEWS,
+			notification: true,
+			showNotification: flashMessages.notify
+		});
+
+	} else {
 		res.render('createuser', {
-		root: VIEWS
-	});
+			root: VIEWS
+		});
 	}
-	
-//
-	
+
+	//
+
 	console.log('now you ready to create a user');
 
 });
@@ -851,7 +862,8 @@ app.get('/createuser', function (req, res) {
 //add entry to users table on post on button press ** new **
 app.post('/createuser',
 	passport.authenticate('local-signup', {
-		failureRedirect:  '/register',failureFlash:true
+		failureRedirect: '/register',
+		failureFlash: true
 	}),
 
 	function (req, res) {
@@ -927,6 +939,7 @@ app.get('/queryme', function (req, res) {
 
 
 //-------------------------------------json manipulation: STEPS
+//NOT USED CURRENTLY **TODO**
 app.get('/addstep', function (req, res) {
 
 	// if (req.session.email == "LoggedIn") {
@@ -948,7 +961,7 @@ app.get("/steps", function (req, res) {
 	});
 	console.log("steps");
 });
-
+//NOT USED CURRENTLY **TODO**
 app.post('/addstep', function (req, res) {
 	var count = Object.keys(steps).length; // Tells us how many products we have its not needed but is nice to show how we can do this
 	console.log(count);
@@ -995,7 +1008,7 @@ app.post('/addstep', function (req, res) {
 	});
 	res.redirect("/steps")
 });;
-
+//NOT USED CURRENTLY **TODO**
 
 app.get('/editstep/:id', function (req, res) {
 
@@ -1013,7 +1026,7 @@ app.get('/editstep/:id', function (req, res) {
 	});
 });
 
-
+//NOT USED CURRENTLY **TODO**
 //post request to edit the individual step
 app.post('/editstep/:id', function (req, res) {
 
@@ -1032,7 +1045,7 @@ app.post('/editstep/:id', function (req, res) {
 	res.redirect("/quiz");
 
 });
-
+// NOT USED CURRENTLY **TODO**
 app.get("/deletestep/:id", function (req, res) {
 	if (req.session.email == "LoggedIn") {
 		var z = parseInt(req.params.id);
@@ -1047,7 +1060,7 @@ app.get("/deletestep/:id", function (req, res) {
 	}
 
 });
-// this is used after you delete a step to keep numbers in order  ... NOT USED CURRENTLY
+// this is used after you delete a step to keep numbers in order  ... NOT USED CURRENTLY **TODO**
 function recalibrate() {
 
 	var x = 0;
@@ -1103,8 +1116,7 @@ app.post('/searchsteps', function (req, res) {
 
 //post request to search for a class
 app.post('/searchclasses', function (req, res) {
-	//var input = document.getElementById("search").value;
-	//console.log(JSON.stringify(req.body));
+
 
 	let sql = 'select * FROM classes WHERE className LIKE "' + req.body.search + '" OR classComments LIKE "%' + req.body.search + '%" ; '
 	let query = db.query(sql, (err, res1) => {
@@ -1121,8 +1133,7 @@ app.post('/searchclasses', function (req, res) {
 });
 //post request to search for a user
 app.post('/searchusers', function (req, res) {
-	//var input = document.getElementById("search").value;
-	//console.log(JSON.stringify(req.body));
+
 
 	let sql = 'select * FROM danceclassusers WHERE userFirstName LIKE "' + req.body.search + '" OR userLastName LIKE "' + req.body.search + '" OR userEmail LIKE "' + req.body.search + '"; '
 	let query = db.query(sql, (err, res1) => {

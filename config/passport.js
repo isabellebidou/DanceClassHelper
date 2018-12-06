@@ -225,7 +225,7 @@ passport.use('local-updateuser', new LocalStrategy({
                 return done(err);
 			 if (!rows.length) {
 			 console.log("No user found");
-			 req.flash('notify', 'No user found.')
+			 req.flash('notify', 'Wrong password.')
                 return done(null, false); 
             }
 
