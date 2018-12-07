@@ -24,8 +24,8 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
 	host: 'isabellebidou.com',
-	user: '******',
-	password: '******',
+	user: 'isabelle_18',
+	password: '123456!!!',
 	database: 'isabelle_db',
 	port: 3306
 });
@@ -49,8 +49,8 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var options = {
 	host: 'isabellebidou.com',
-	user: '******',
-	password: '******',
+	user: 'isabelle_18',
+	password: '123456!!!',
 	database: 'isabelle_db',
 	port: 3306
 };
@@ -439,6 +439,7 @@ app.get('/classes', function (req, res) {
 	let sql = 'SELECT * FROM classes'
 	let query = db.query(sql, (err, res1) => {
 		if (err) throw err;
+		console.log('now you are on classes: ');
 
 
 		res.render('classes', {
@@ -446,7 +447,7 @@ app.get('/classes', function (req, res) {
 			res1
 		});
 	});
-	console.log('now you are on classes: ');
+	
 });
 //students page
 app.get('/students', function (req, res) {
@@ -862,7 +863,7 @@ app.get('/createuser', function (req, res) {
 //add entry to users table on post on button press ** new **
 app.post('/createuser',
 	passport.authenticate('local-signup', {
-		failureRedirect: '/register',
+		failureRedirect: '/createuser',
 		failureFlash: true
 	}),
 
