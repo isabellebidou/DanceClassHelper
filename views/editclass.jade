@@ -1,4 +1,5 @@
 extends layout
+
 block content
       
     .maincontent
@@ -6,23 +7,37 @@ block content
           h1.itemtitle Edit this class
           
           each row in res1
+            script.
+              $(document).ready(function() {
+              //$('#datepicker').datepicker({ dateFormat: 'yy-mm-dd' });
+              $("#datepicker").datepicker('setDate', "#{row.classDate.toISOString()}");
+              });
+            
             form(method = "post")
               fieldset
                 label(for= "newname") Name:
-                input(name= "newname", type = "text", value = "#{row.className}") 
-                label(for= "newdate") Date:"#{row.classDate}"
-                input(name= "newdate", type = "date", value = "{row.classDate}") 
+                input(name= "newname", type = "text", value = row.className) 
+                label(for= "newdate") Date:"#{row.classDate.toISOString()}"
+                input(name= "newdate", type = "date",  id="datepicker")
                 label(for= "newvenue") Venue:
-                input(name= "newvenue", type = "text", value = "#{row.classVenue}") 
+                input(name= "newvenue", type = "text", value = row.classVenue) 
                 label(for= "newtime") Time:
-                input(name= "newtime", type = "time", value = "#{row.classTime}") 
+                input(name= "newtime", type = "time", value = row.classTime) 
                 label(for= "newprice") Price:
-                input(name= "newprice", type = "text", value = "#{row.classPrice}")
+                input(name= "newprice", type = "text", value = row.classPrice)
                 label(for= "newcomments") Comments:
-                input(name= "newcomments", type = "text", value = "#{row.classComments}") 
+                input(name= "newcomments", type = "text", value = row.classComments) 
                 label(for= "newlink") Link:
-                input(name= "newlink", type = "url", value = "#{row.Link}") 
+                input(name= "newlink", type = "url", value = row.Link) 
                 button.button(type="submit") Update
+                // script.
+                //   $(document).ready(function() {
+                //   $("#datepicker1").datepicker('setDate', row.classDate);
+                //   });
+                // script.
+                //   if (10 == 10) {
+                //   alert("working")
+                //   }
                 
                // className= "' + req.body.newname + '" 
                //, classDate = "' + req.body.newdate + '", 

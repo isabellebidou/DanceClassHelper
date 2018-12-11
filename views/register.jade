@@ -18,7 +18,7 @@ block content
               label(for= "comments") comments:
               input(name= "comments", type ="text", placeholder = "comments")
               label(for= "email") email:
-              input(name= "email", type = "text", pattern ="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$", placeholder = "enter email", required)
+              input(name= "email", type = "text", pattern ="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,3}$", placeholder = "enter email", required)
               label(for= "password") Password:
               input(name= "password", type = "text", pattern="(?=.*\d)(?=.*[A-Z])(?=.*[a-z]){6,}", title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters",placeholder = "enter password", required)
               br

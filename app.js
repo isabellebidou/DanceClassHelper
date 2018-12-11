@@ -808,7 +808,7 @@ app.get('/editclass/:id', authenticationMiddleware(), function (req, res) {
 
 app.post('/editclass/:id', function (req, res) {
 
-	let sql = 'UPDATE classes SET className= "' + req.body.newname + '" , classDate = "' + req.body.newdate + '", classVenue = "' + req.body.newvenue + '", classTime = "' + req.body.newtime + '",classPrice = "' + req.body.newprice + '", classComments = "' + req.body.newcomments + '", Link = "' + req.body.newlink + '" WHERE Id = "' + req.params.id + '" ;'
+	let sql = 'UPDATE classes SET className= "' + req.body.newname + '" , classDate = "' + req.body.newdate + '", classVenue = "' + req.body.newvenue + '", classTime = "' + req.body.newtime + '",classPrice = "' + req.body.newprice + '", classComments = "' + req.body.newcomments + '", Link = "' + req.body.newlink + '" WHERE classId = "' + req.params.id + '" ;'
 
 	let query = db.query(sql, (err, res1) => {
 		if (err) throw (err);
