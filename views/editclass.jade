@@ -9,15 +9,22 @@ block content
           each row in res1
             script.
               $(document).ready(function() {
-              //$('#datepicker').datepicker({ dateFormat: 'yy-mm-dd' });
-              $("#datepicker").datepicker('setDate', "#{row.classDate.toISOString()}");
+              $('#datepicker').datepicker();
+              $('#datepicker').datepicker({ dateFormat: 'yyyy-MM-dd' });
+              alert("working");
+              var date = new Date("#{row.classDate)}");
+              var year = date.getfullYear();
+              var month = date.getMonth();
+              var day = date.getDate();
+              console.log("bloup"+"#{row.classDate)}"+date.getfullYear()+''+month+""+day);
+              $("#datepicker").value= "+year+'-'+month'+'-'+day'";
               });
             
             form(method = "post")
               fieldset
                 label(for= "newname") Name:
                 input(name= "newname", type = "text", value = row.className) 
-                label(for= "newdate") Date:"#{row.classDate.toISOString()}"
+                label(for= "newdate") Date:"#{row.classDate}"
                 input(name= "newdate", type = "date",  id="datepicker")
                 label(for= "newvenue") Venue:
                 input(name= "newvenue", type = "text", value = row.classVenue) 

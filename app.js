@@ -821,7 +821,7 @@ app.post('/editclass/:id', function (req, res) {
 
 app.get('/deleteclass/:id', function (req, res) {
 
-	let sql = 'DELETE FROM classes WHERE Id = "' + req.params.id + '"; '
+	let sql = 'DELETE FROM classes WHERE classId = "' + req.params.id + '"; '
 	let query = db.query(sql, (err, res1) => {
 		if (err) throw (err);
 		res.redirect('/classes');
