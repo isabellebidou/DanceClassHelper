@@ -1,36 +1,12 @@
 extends layout
-script
-  | var ststr = url.split("&t=")[1];
-  | var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
-  | var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
-  | $('#player').attr('src', embedUrl)
-  | window.location.href = "#video";
+
 block content
       .maincontent
-       h1.Step
 
-        
-          .grid-container
               each step in indOne
-               
-                .item
+                .video
                   h1.itemtitle #{step.name}
-                  iframe#player.centered(width='420', height='315', frameborder='0', allowfullscreen='')
-                  #id01
-                  h2.itemtitle http://www.youtube.com/embed/#{step.id}
-                  //<iframe src="http://www.youtube.com/embed/#{step.id}"></iframe>
-                  //<iframe src=#{step.embedurl}></iframe>
-                  
-                  script
-                  | var ststr = url.split("&t=")[1];
-                  | var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
-                  | var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
-                  | $('#player').attr('src', embedUrl)
-                  | window.location.href = "#video";
-                  // script.
-                  //   var ststr = url.split("&t=")[1];
-                  //   console.log("there!!!!!!!!!!!!!!");
-                  //   var st = parseInt(ststr.charAt(0) * 60) + parseInt(ststr.substr(2, 3));
-                  //   var embedUrl = "http://www.youtube.com/embed/" + id + "?start=" + st;
-                  //   $('#player').attr('src', embedUrl)
-                  //   window.location.href = "#video";
+
+                  iframe#player.centered(width='100%', height='100%', frameborder='0', allowFullScreen='allowFullScreen', autoplay = '1', 
+                  src = 'https://www.youtube.com/embed/' + step.id +"?start="+ step.start)
+                  h2.itemtitle http://www.youtube.com/embed/#{step.id}?start=#{step.start}

@@ -12,7 +12,7 @@ app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
     user: 'isabelle_1',
-    password: 'TheHorse18',
+    password: 'lelion75',
     database: 'isabelle_db',
     port: 3306
 });
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', function(req, res) {
     res.render('index', { root: VIEWS });
     console.log('now you are home');
-    
+
 });
 
 
@@ -62,7 +62,7 @@ app.get('/students', function(req, res) {
     console.log('now you are on students');
 });
 
-app.get('/class/:id', function(req, res) { 
+app.get('/class/:id', function(req, res) {
 
     let sql = 'SELECT * FROM classes WHERE classId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
@@ -70,11 +70,11 @@ app.get('/class/:id', function(req, res) {
         res.render('class', { root: VIEWS, res1 });
 
     });
-   
+
     console.log("Now you are on the class page!");
 });
 
-app.get('/student/:id', function(req, res) { 
+app.get('/student/:id', function(req, res) {
 
     let sql = 'SELECT * FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
     let query = db.query(sql, (err, res1) => {
@@ -82,14 +82,14 @@ app.get('/student/:id', function(req, res) {
         res.render('student', { root: VIEWS, res1 });
 
     });
-   
+
     console.log("Now you are on the student page!");
 });
 
 
 //register page
 app.get('/register', function(req, res) {
-    
+
         // res.sendFile('index.html', {root: VIEWS},behaviour);
         res.render('register', { root: VIEWS });
         console.log('now you ready to register');
@@ -98,8 +98,8 @@ app.get('/register', function(req, res) {
 
 //step page
 app.get('/step', function(req, res) {
-    
-        
+
+
         res.render('step', { root: VIEWS });
         console.log('checking a step');
 
@@ -214,7 +214,7 @@ app.get('/createtable', function(req, res) {
 
 //createclass page
 app.get('/createclass', function(req, res) {
-    
+
         // res.sendFile('index.html', {root: VIEWS},behaviour);
         res.render('createclass', { root: VIEWS });
         console.log('now you ready to create a class');
@@ -224,7 +224,7 @@ app.get('/createclass', function(req, res) {
 //add entry to class table on post on button press
 app.post('/createclass', function(req, res) {
     let sql = 'INSERT INTO classes (className,classDate,classVenue,classTime,classPrice,classComments,Link) VALUES ("' + req.body.name + '","' + req.body.date + '","' + req.body.venue + '","' + req.body.time + '","' + req.body.price + '","' + req.body.comments + '","' + req.body.link + '");'
-    
+
     let query = db.query(sql, (err, res) => {
 
         if (err) throw err;
@@ -256,7 +256,7 @@ app.post('/editclass/:id', function(req, res) {
 
 
 app.get('/deleteclass/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM classes WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -285,7 +285,7 @@ app.post('/createstudent', function(req, res1) {
     });
     //res1.render('students', { root: VIEWS });
     res1.redirect('/students');
-   
+
 
 });
 
@@ -312,7 +312,7 @@ app.post('/editstudent/:id', function(req, res) {
 
 
 app.get('/deletestudent/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM danceclassusers WHERE userId = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -359,7 +359,7 @@ app.post('/edituserroles/:id', function(req, res) {
 
 
 app.get('/deleteuserroles/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM userRoles WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -404,7 +404,7 @@ app.post('/editcart/:id', function(req, res) {
 
 
 app.get('/deletecart/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM cart WHERE cartId = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -451,7 +451,7 @@ app.post('/editstepfamily/:id', function(req, res) {
 
 
 app.get('/deletestepfamily/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM stepFamily WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -497,7 +497,7 @@ app.post('/editstepcategory/:id', function(req, res) {
 
 
 app.get('/deletestepcategory/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM stepCategory WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -543,7 +543,7 @@ app.post('/editstepcategory/:id', function(req, res) {
 
 
 app.get('/deletestepzillpattern/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM stepZillPattern WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -587,7 +587,7 @@ app.post('/editstep/:id', function(req, res) {
 
 
 app.get('/deletestep/:id', function(req, res) {
-    
+
         let sql = 'DELETE FROM step WHERE Id = "' + req.params.id + '"; '
         let query = db.query(sql, (err, res1) => {
             if (err) throw (err);
@@ -596,12 +596,12 @@ app.get('/deletestep/:id', function(req, res) {
 
 });
 
-app.get('/step/:id', function(req, res) { 
-    
+app.get('/step/:id', function(req, res) {
+
     var indOne = null;
 
 function choosestep(indOne) {
-    
+
         return indOne.index === parseInt(req.params.id);
     }
 
@@ -609,8 +609,8 @@ function choosestep(indOne) {
     indOne = steps.filter(choosestep);
     console.log(indOne);
 
-    
-  
+
+
 //    var embedUrl = behaviour.makeEmbedUrl(indOne[0].url, indOne[0].id);
 //    console.log("app.get: "+embedUrl);
 
@@ -653,7 +653,7 @@ app.post('/addstep', function(req, res) {
     var count = Object.keys(steps).length; // Tells us how many products we have its not needed but is nice to show how we can do this
     console.log(count);
 
-    // This will look for the current largest id in the steps JSON file this is only needed if you want the steps to have an auto ID which is a good idea 
+    // This will look for the current largest id in the steps JSON file this is only needed if you want the steps to have an auto ID which is a good idea
 
     function getMax(steps, id) {
         var max
@@ -670,7 +670,7 @@ app.post('/addstep', function(req, res) {
     var newId = maxPpg.id + 1; // this creates a nwe variable called newID which is the max Id + 1
     console.log(newId); // We console log the new id for show reasons only
 
-    // create a new product based on what we have in our form on the add page 
+    // create a new product based on what we have in our form on the add page
 
     var step = {
         step: req.body.step, // name called from the add.jade page textbox
@@ -679,17 +679,17 @@ app.post('/addstep', function(req, res) {
         id: newId, // this is the variable created above
 
     };
-    console.log(step) // Console log the new product 
+    console.log(step) // Console log the new product
     var json = JSON.stringify(steps); // Convert from object to string
 
-    // The following function reads the json file then pushes the data from the variable above to the steps JSON file. 
+    // The following function reads the json file then pushes the data from the variable above to the steps JSON file.
     fs.readFile('./models/steps.json', 'utf8', function readFileCallback(err, data) {
         if (err) {
             throw (err);
         }
         else {
             steps.push(step); // add the information from the above variable
-            json = JSON.stringify(steps, null, 4); // converted back to JSON the 4 spaces the json file out so when we look at it it is easily read. So it indents it. 
+            json = JSON.stringify(steps, null, 4); // converted back to JSON the 4 spaces the json file out so when we look at it it is easily read. So it indents it.
             fs.writeFile('./models/steps.json', json, 'utf8'); // Write the file back
 
         }
@@ -776,6 +776,6 @@ function recalibrate() {
 
 
 //set up the environment for the app to run
-app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0" , function(){
+app.listen(process.env.PORT || 4000, process.env.IP || "0.0.0.0" , function(){
     console.log("app is running");
 });
