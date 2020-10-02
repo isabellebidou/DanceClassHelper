@@ -11,9 +11,9 @@ app.use(express.static("images"));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: 'isabelle_1',
-    password: 'lelion75',
-    database: 'isabelle_db',
+    user: '***_1',
+    password: '*****',
+    database: '****le_db',
     port: 3306
 });
 db.connect((err) => {
