@@ -15,6 +15,7 @@ var flash = require('express-flash-messages')
 
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
+//app.set('trust proxy', 1);
 //app.use(session);
 
 app.use(bodyParser.urlencoded({
@@ -23,11 +24,11 @@ app.use(bodyParser.urlencoded({
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'jade');
 const db = mysql.createConnection({
-	host: 'isabellebidou.com',
-	user: 'isabelle_18',
-	password: '123456!!!',
-	database: 'isabelle_db',
-	port: 3306
+    host: 'isabellebidou.com',
+    user: 'is******',
+    password: '******',
+    database: 'isabe***b',
+    port: 3306
 });
 db.connect((err) => {
 	if (err) {
@@ -48,11 +49,11 @@ var LocalStrategy = require('passport-local').Strategy;
 
 
 var options = {
-	host: 'isabellebidou.com',
-	user: 'isabelle_18',
-	password: '123456!!!',
-	database: 'isabelle_db',
-	port: 3306
+    host: 'isabellebidou.com',
+    user: 'isab****',
+    password: '******',
+    database: 'isab***',
+    port: 3306
 };
 var sessionStore = new MySQLStore(options);
 app.set('trust proxy', 1);
@@ -60,10 +61,11 @@ app.use(session({
 	secret: 'qwertys',
 	store: sessionStore,
 	resave: false,
-	saveUninitialized: false,
-	cookie: {
-		secure: true
-	}
+    saveUninitialized: false,
+    cookie: {}//https://www.reddit.com/r/AskProgramming/comments/6y2ntk/passportjs_deserializeuser_never_called/
+	// cookie: {
+	// 	secure: true
+	// }
 }));
 
 app.use(passport.initialize());
@@ -1151,6 +1153,6 @@ app.post('/searchusers', function (req, res) {
 });
 
 //set up the environment for the app to run
-app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function () {
+app.listen(process.env.PORT || 4000, process.env.IP || "0.0.0.0", function () {
 	console.log("app is running");
 });
