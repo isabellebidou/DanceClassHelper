@@ -16,9 +16,9 @@ var mysql = require('mysql');
 
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: 'i******',
-    password: 'l******',
-    database: 'isabe***_db',
+    user: '***_1',
+    password: '*****',
+    database: '****le_db',
     port: 3306
 });
 

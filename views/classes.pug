@@ -1,0 +1,29 @@
+extends layout
+block content
+      .maincontent
+          form(method="post" action="/searchclasses")
+              input(name="search", type="text", Placeholder="Search For a class...") 
+              button.button(type="submit") Search     
+        
+          h2 beginners classes
+            .grid-container
+              each row in res1
+                if isAuthenticated
+                  .item 
+                    h2.itemtitle #{row.className}
+                    |#{row.classDate.toLocaleDateString("en-US")} at #{row.classTime} GMT+2
+                    br
+                    |venue: #{row.classVenue}
+                    br
+                    a.button(href="/class/"+row.classId) Show
+                    if user.userActive == "active"
+                      a.button(href="/cart/"+row.classId) Add to cart
+                    if user.userRole == "teacher"
+                      a.button(href='/editclass/'+row.classId) Edit
+                      a.deletebutton(href='/deleteclass/'+row.classId) Delete
+                    else if user.userActive != "active"
+                      p account is still being processed
+                    
+
+                    
+                  

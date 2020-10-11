@@ -1,0 +1,16 @@
+extends layout
+block content
+      .maincontent
+       form(method="post" action="/searchsteps")
+              input(name="search", type="text", Placeholder="Search For a step...") 
+              button.button(type="submit") Search
+        
+              h2 Here are the steps we need to know
+              .grid-container
+                  each step in steps
+                    if isAuthenticated 
+                      .item    
+                        img.thumbnail(src = 'https://img.youtube.com/vi/'+ step.id +'/default.jpg', alt="thumbnail")
+                        h1.itemtitle #{step.name}
+                        p.itemp #{step.family} family (#{step.category})
+                        a.button(href='/step/'+step.index) View

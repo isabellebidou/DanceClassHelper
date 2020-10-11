@@ -1,0 +1,17 @@
+extends layout
+block content
+      .maincontent
+          form(method="post" action="/searchusers")
+              input(name="search", type="text", Placeholder="Search For a student...") 
+              button.button(type="submit") Search
+          h2 Users
+            .grid-container
+              each row in res1
+                .item
+                 
+                  h2.itemtitle #{row.userFirstName}  #{row.userLastName}
+                   
+                  h3.itemtitle #{row.userActive}
+                  a.button(href="/student/"+row.userId) Show
+                  a.button(href='/editstudent/'+row.userId) Edit
+                  a.deletebutton(href='/deletestudent/'+row.userId) Delete

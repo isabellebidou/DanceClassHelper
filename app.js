@@ -22,12 +22,12 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 const db = mysql.createConnection({
     host: 'isabellebidou.com',
-    user: 'is******',
-    password: '******',
-    database: 'isabe***b',
+    user: '***_1',
+    password: '*****',
+    database: '****le_db',,
     port: 3306
 });
 db.connect((err) => {
@@ -50,9 +50,9 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: 'isab****',
-    password: '******',
-    database: 'isab***',
+    user: '***_1',
+    password: '*****',
+    database: '****le_db',
     port: 3306
 };
 var sessionStore = new MySQLStore(options);
@@ -641,13 +641,10 @@ app.post('/register',
 
 //step page
 app.get('/step', function (req, res) {
-
-
 	res.render('step', {
 		root: VIEWS
 	});
 	console.log('checking a step');
-
 });
 //--------------------- CREATE TABLES
 app.get('/createorderstable', function (req, res) {
@@ -912,9 +909,7 @@ app.get('/deletestudent/:id', function (req, res) {
 
 
 app.get('/step/:id', function (req, res) {
-
 	var indOne = null;
-
 	function choosestep(indOne) {
 
 		return indOne.index === parseInt(req.params.id);

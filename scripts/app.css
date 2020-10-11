@@ -174,16 +174,23 @@ p{
   padding: 10px;
 }
 .topnav > a{
-    background-color: rgba(255, 255, 255, 0.6);
+    /*background-color: rgba(255, 255, 255, 0.6);*/
   text-align: center;
- padding: 0.5em;
+  padding: 0.5em;
   margin-right: 0.5em;
   margin-left: 0em;
   border-radius: 1%;
   font-size: 1.2em;
   font-style: oblique;
 }
-    
+.topnav > a:hover{
+    background-color: rgba(255, 255, 255, 0.6);
+
+} 
+.topnav > a:visited 
+{
+    text-decoration: none
+}  
 .item {
   
   text-align: center;
@@ -242,26 +249,70 @@ p{
 label{
     color: #7f5f87;
     font-size: 1em;
-    background-color: rgba(255, 255, 255, 0.4);
+    /*background-color: rgba(255, 255, 255, 0.4);*/
     border-radius: 1%;
     
 }
 .button {
-    background-color: #7f5f87;
-    border: none;
+    background-color: rgba(127, 95, 135, 0.2);
+    border: 0.2em;
+    border-color: #bba2c2;
     color: white;
-    padding: 15px 32px;
+    padding: 0.1em;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 1em;
+    margin: 0.1em;
     cursor: pointer;
 }
+a.button:hover {
+    border: 0.2em;
+    border-color: #96ccba;
+    color: blue;
+  }
+  a.button:active {
+    border: 0.2em;
+    border-color: #96ccba;
+    color: rgb(236, 226, 81);
+  }
 
+  .deletebutton {
+    background-color: rgba(127, 95, 135, 0.2);
+    border: 0.2em;
+    border-color: #bba2c2;
+    color: red;
+    padding: 0.1em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    margin: 0.1em;
+    cursor: pointer;
+}
+a.deletebutton:hover {
+    border: 0.2em;
+    border-color: #96ccba;
+    color: blue;
+  }
+  a.deletebutton:active {
+    border: 0.2em;
+    border-color: #96ccba;
+    color: rgb(236, 226, 81);
+  }
 /* Style for form */
+.radio{
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
 
-input, select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+}
+
+input, select, .submit{
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -269,6 +320,12 @@ input, select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+.submit{
+    background-color: #7f5f87
+}
+button.submit:hover{
+    color: blue
 }
 .notify{
 
