@@ -27,7 +27,7 @@ const db = mysql.createConnection({
     host: 'isabellebidou.com',
     user: '***_1',
     password: '*****',
-    database: '****le_db',,
+    database: '****le_db',
     port: 3306
 });
 db.connect((err) => {
