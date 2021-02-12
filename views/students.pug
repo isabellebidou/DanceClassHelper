@@ -8,9 +8,7 @@ block content
             .grid-container
               each row in res1
                 .item
-                 
-                  h2.itemtitle #{row.userFirstName}  #{row.userLastName}
-                   
+                  h2.itemtitle #{row.userFirstName}  #{row.userLastName}               
                   h3.itemtitle #{row.userActive}
                   a.button(href="/student/"+row.userId) Show
                   a.button(href='/editstudent/'+row.userId) Edit

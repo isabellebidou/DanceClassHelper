@@ -48,8 +48,10 @@ html
                 a(href='/steps') steps
                 a(href='/students') Students
                 a(href='/createuser') add Students
+                a(href='/cart') cart
                 a(href='/logout') Logout
-            else if user.userActive == "active"
+            //-else if user.userActive == "active"
+            else if user.userRole == "student" 
               .topnav
                 a(href='/') Home
                 a(href='/classes') Classes
@@ -67,6 +69,7 @@ html
           else
             .topnav
                 a(href='/') Home
+                a(href='/cart') cart
                 a(href='/login') Login
                 a(href='/register') Register
                 
@@ -94,8 +97,10 @@ html
                 li
                   a.mobilemenuli(href='/steps') Steps
                 li
+                  a.mobilemenuli(href='/cart') Cart
+                li
                   a.mobilemenuli(href='/logout') Logout
-              else if user.userActive == "active"
+              else if user.userRole == "student"
 
                 li
                   a.mobilemenuli(href='/') Home

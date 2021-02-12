@@ -11,6 +11,11 @@ const VIEWS = path.join(__dirname, 'views');
 app.use(express.static("scripts"));
 app.use(express.static("images"));
 var flash = require('express-flash-messages')
+//let activeCart = [];
+//let total = 0;
+//let items = "";
+//let cart;
+
 
 
 var session = require('express-session');
@@ -23,13 +28,7 @@ app.use(bodyParser.urlencoded({
 }));
 //app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.set('view engine', 'pug');
-const db = mysql.createConnection({
-    host: 'isabellebidou.com',
-    user: '***_1',
-    password: '*****',
-    database: '****le_db',
-    port: 3306
-});
+const db = secret.db;
 db.connect((err) => {
 	if (err) {
 
@@ -50,9 +49,9 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var options = {
     host: 'isabellebidou.com',
-    user: '***_1',
-    password: '*****',
-    database: '****le_db',
+    user: 'isabelle_1',
+    password: 'lelion75',
+    database: 'isabelle_db',
     port: 3306
 };
 var sessionStore = new MySQLStore(options);
@@ -97,7 +96,7 @@ app.get('/', function (req, res) {
 	console.log("req.user " + JSON.stringify(req.user));
 
 	console.log("req.isAuthenticated() " + req.isAuthenticated());
-	console.log("req.session " + JSON.stringify(req.session));
+	console.log("req.session.cart " + JSON.stringify(req.session.cart));
 	if (req.isAuthenticated()) {
 		console.log(req.user.userRole);
 		res.render('index', {
@@ -173,32 +172,55 @@ app.post('/login',
 		//res.render('index', { root: VIEWS, req });
 	});
 app.get('/removeitem/:id', function (req, res) {
-	// find order id
+	console.log("removeitem");
+	console.log("req.body " + JSON.stringify(req.body));
 	var orderId = null;
 	if (req.session.cart == "active") {
 		let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
 
 		let query3 = db.query(sql3, (err, res2) => {
 			if (err) throw err;
+			console.log("sql3:" + sql3)
 			console.log("res2:" + res2)
 			orderId = res2[0].orderId;
 			let sql2 = 'DELETE FROM orderitems WHERE orderId ="' + orderId + '" AND itemId = "' + req.params.id + '" LIMIT 1;'
-			console.log("sql2: " + sql2);
+			//console.log("sql2: " + sql2);
+			let queryCheck = db.query(sql3,(err, res4) => {
+				if (err) throw err;
+				var checkId = res4[0].orderId;
+				if(!checkId) req.session.cart = " ";
+
+			});
 
 			let query2 = db.query(sql2, (err, res3) => {
 				if (err) throw err;
 				fillInCart(req, res);
 
 			});
+			//res.redirect('/cart');
 
 		});
 	}
-
+	//res.redirect('/cart');
+	// res.render('cart', {
+	// 	root: VIEWS,
+	// 	activeCart,
+	// 	total,
+	// 	items
+	// });
 });
 
 app.get('/removeallitems', function (req, res) {
 
 	emptyCart(req, res);
+	//res.redirect('/cart');
+	fillInCart(req, res);
+	// res.render('cart', {
+	// 	root: VIEWS,
+	// 	activeCart,
+	// 	total,
+	// 	items
+	// });
 });
 
 
@@ -247,47 +269,120 @@ function emptyCart(req, res) {
 // cart page used when the user clicks on the cart button
 
 app.get('/cart', function (req, res) {
+	//activeCart = (req.originalUrl == '/cart') ? 
 	console.log("cart");
-	console.log("req.user " + JSON.stringify(req.user));
-	console.log("req.user.userId " + req.user.userId);
-	console.log("req.isAuthenticated() " + req.isAuthenticated());
-	console.log("req.session " + JSON.stringify(req.session));
-	console.log("req.session.id " + req.session.id);
-	fillInCart(req, res);
-	console.log('now you are on the cart view');
+	//console.log("req" + JSON.stringify(req));
+	console.log("req.body: " +JSON.stringify(req.body));
+	console.log("req.originalUrl: " +req.originalUrl);
+	//console.log("req.user.userId " + req.user.userId);
+	//console.log("req.isAuthenticated() " + req.isAuthenticated());
+	//console.log("req.session " + JSON.stringify(req.session));
+	//console.log("req.session.id " + req.session.id);
+	//if (req.originalUrl == "/cart")fillInCart(req, res);
+	var cart = fillInCart(req, res);
+	console.log("cart: "+cart);
+	// res.render('cart', {
+	// 	root: VIEWS,
+	// 	cart: cart
+	// });
 
-});
-
-app.get('/cart/:id', function (req, res) {
-	console.log("cart");
-	console.log("req.user " + JSON.stringify(req.user));
-	console.log("req.user.userId " + req.user.userId);
-	console.log("req.isAuthenticated() " + req.isAuthenticated());
-	console.log("req.session " + JSON.stringify(req.session));
-	console.log("req.session.id " + req.session.id);
-	//   console.log("req.session.cart " + req.session.cart.id);
-
-
-	//the order already exists as the customer has already put an item in the cart
 	if (req.session.cart == "active") {
-
-		// find order id
+		// find existing order id in db
 		var orderId = null;
-
 		let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
 		console.log("sql3: " + sql3);
 		let query3 = db.query(sql3, (err, res2) => {
 			if (err) throw err;
-			console.log("res2:" + res2)
 			orderId = res2[0].orderId;
+			if (orderId){
+				// add items to the exising order
+				console.log('req.params: '+req.params); 
 			let sql2 = 'INSERT INTO orderitems (itemId,orderId,itemQuantity)VALUES("' + parseInt(req.params.id) + '","' + orderId + '","' + 1 + '");'
-			console.log("sql2: " + sql2);
-
 			let query2 = db.query(sql2, (err, res3) => {
 				if (err) throw err;
 				fillInCart(req, res);
+			});
+
+			}
+			
+
+		});
+
+	} else {
+				//1. make session
+				req.session.cart = "active";
+				console.log("req.session.cart " + req.session.cart);
+				//create order
+				var d = new Date();
+				var date = "";
+		
+				var y = utils.addZero(d.getFullYear(), 4);
+				var mo = utils.addZero(d.getMonth() + 1, 2); // javascript getMonth() starts at 0
+				var da = utils.addZero(d.getDate(), 2);
+				date = y + "-" + mo + "-" + da;
+				let sql1 = 'INSERT INTO orders (orderReference,orderDate,orderStatus,orderUserId) VALUES("' + req.session.id + '","' + date + '"," pending ","' + req.user.userId + '");'
+				let query = db.query(sql1, (err, res2) => {
+					if (err) throw err;
+		
+					// 2. find order id
+					var orderId = null;
+		
+					let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
+					let query3 = db.query(sql3, (err, res2) => {
+						if (err) throw err;
+						orderId = res2[0].orderId;
+						console.log("res2:" + JSON.stringify(res2))
+						console.log("sql3: " + sql3);
+						console.log("orderId: " + orderId);
+						//3. create orderItemLine using the orderid found in query3
+		
+						let sql2 = 'INSERT INTO orderitems (orderitems.itemId,orderitems.orderId,orderitems.itemQuantity)VALUES("' + parseInt(req.params.id) + '","' + orderId + '","' + 1 + '");'
+						console.log("sql2: " + sql2);
+						let query2 = db.query(sql2, (err, res3) => {
+							if (err) throw err;
+							//4. fill in the cart
+							fillInCart(req, res);
+		
+						});
+		
+					});
+		
+				});
+		
+			}
+
+	
+					
+	
+
+});
 
 
+
+app.get('/cart/:id', function (req, res) {
+	console.log("cartid");
+	console.log("req.body: " +JSON.stringify(req.body));
+	console.log("req.originalUrl: " +req.originalUrl);
+	//console.log("req.user.userId " + req.user.userId);
+	//console.log("req.isAuthenticated() " + req.isAuthenticated());
+	//console.log("req.session " + JSON.stringify(req.session));
+	//console.log("req.session.id " + req.session.id);
+	//   console.log("req.session.cart " + req.session.cart.id);
+	//the order already exists as the customer has already put an item in the cart
+	if (req.session.cart == "active") {
+
+		// find existing order id in db
+		var orderId = null;
+		let sql3 = 'SELECT orderId FROM orders WHERE orderUserId = "' + parseInt(req.user.userId) + '" ORDER BY orderId DESC LIMIT 1;';
+		console.log("sql3: " + sql3);
+		let query3 = db.query(sql3, (err, res2) => {
+			if (err) throw err;
+			orderId = res2[0].orderId;
+			// add items to the exising order 
+			let sql2 = 'INSERT INTO orderitems (itemId,orderId,itemQuantity)VALUES("' + parseInt(req.params.id) + '","' + orderId + '","' + 1 + '");'
+			let query2 = db.query(sql2, (err, res3) => {
+				if (err) throw err;
+				fillInCart(req, res);
 			});
 
 		});
@@ -336,13 +431,17 @@ app.get('/cart/:id', function (req, res) {
 		});
 
 	}
-
-
-	console.log('now you are on the cart view');
-
+	//res.redirect('/cart');
+	// res.render('cart', {
+	// 	root: VIEWS,
+	// 	activeCart,
+	// 	total,
+	// 	items
+	// });
 });
 
 function fillInCart(req, res) {
+	console.log('fillInCart');
 	if (req.session.cart == "active") {
 
 		var orderId = null;
@@ -355,42 +454,91 @@ function fillInCart(req, res) {
 
 			let query2 = db.query(sql2, (err, res1) => {
 				if (err) throw err;
-				var total = 0;
-				var items = " ";
+				var _total = 0;
+				var _items = " ";
 				for (var i = 0; i < res1.length; i++) {
-					total += res1[i].lineTotal;
-					items += " ";
-					items += res1[i].className;
+					_total += res1[i].lineTotal;
+					_items += " ";
+					_items += res1[i].className;
 				}
-				updateOrderTotal(req, total);
+				updateOrderTotal(req, _total);
+				//cart.cartLines = res1;
+				//cart.cartLines = res1;
+				//cart.cartTotal = _total;
+				//cart.cartItems = _items;
 
-				res.render('cart', {
-					root: VIEWS,
-					res1,
-					total,
-					items
-				});
-			});
-		});
-	} else {
+				// console.log('res1: '+ JSON.stringify(res1));
+				// console.log('total: '+_total);
+				// console.log('items: '+_items);
 
-		var res1 = [];
-		var total = 0;
-		var items = "";
+				//console.log(cart);
+
+		// res.render('cart', {
+		// 	root: VIEWS,
+		// 	cart 
+		// });
+		//var c = new Cart(res1,_total,_items);
+		//console.log('c: '+JSON.stringify(c));
 		res.render('cart', {
 			root: VIEWS,
 			res1,
-			total,
-			items
+			_total,
+			_items
+		});
+				//return c
+				//res.redirect('/cart');
+				// res.render('cart', {
+				// 	root: VIEWS,
+				// 	res1,
+				// 	_total,
+				// 	_items
+				// });
+				//console.log('res.rendercart2');
+			});
+		});
+		
+	} else {
+
+		var res1 = [];
+		var _total = 0;
+		var _items = "";
+		// cart.cartLines = res1;
+		// cart.cartTotal = _total;
+		// cart.cartItems = _items;
+		// activeCart = [];
+		// total = 0;
+		// items = "";
+		//return new Cart([],0,'');
+		// res.render('cart', {
+		// 	root: VIEWS,
+		// 	res1,
+		// 	total,
+		// 	items
+		// });
+		//var c = new Cart([],0,'');
+		//console.log('c: '+JSON.stringify(c));
+		res.render('cart', {
+			root: VIEWS,
+			res1,
+			_total,
+			_items
 		});
 
 	}
 
 }
 
-function updateOrderTotal(req, total) {
+class Cart {
+	constructor(lines, tot, items) {
+		this.cartLines = lines,
+		this.cartTotal = tot,
+		this.cartItems = items;
+	}
+}
 
-	let sql = 'UPDATE orders SET orderTotal ="' + total + '" WHERE orderReference = "' + req.session.id + '";'
+function updateOrderTotal(req, _total) {
+
+	let sql = 'UPDATE orders SET orderTotal ="' + _total + '" WHERE orderReference = "' + req.session.id + '";'
 
 
 	let query = db.query(sql, (err, res1) => {

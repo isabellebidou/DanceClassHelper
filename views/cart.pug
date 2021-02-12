@@ -19,7 +19,7 @@ block content
                         a.button(href="/removeitem/"+row.id) remove item
                         
             tr
-                td(colspan='2') Final total:€ #{total}
+                td(colspan='2') Final total:€ #{_total}
                 td(colspan='2' href="/thankyou")
                  form(action='https://www.sandbox.paypal.com/cgi-bin/webscr', method='post')
                       
@@ -27,8 +27,8 @@ block content
                       
                   input(type='hidden', name='cmd', value='_xclick')
                       
-                  input(type='hidden', name='item_name', value='#{items}')
-                  input(type='hidden', name='amount', value='#{total}')
+                  input(type='hidden', name='item_name', value='#{_items}')
+                  input(type='hidden', name='amount', value='#{_total}')
                   input(type='hidden', name='currency_code', value='USD')
                       
                   input(type='image', nsame='submit', border='0', src='https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif', alt='Buy Now')
